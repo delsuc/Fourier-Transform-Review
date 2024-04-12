@@ -21,7 +21,7 @@ csl: nature.csl
 execute:
   keep-ipynb: false
   cache: true
-forma : 
+format : 
   titlepage-pdf:
     titlepage: vline 
     titlepage-logo: false #"img/logo.png"
