@@ -1,0 +1,1302 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.542">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Marc-André Delsuc">
+<meta name="author" content="Peter O’Connor">
+<meta name="dcterms.date" content="2024-04-12">
+
+<title>The Fourier Transform in Analytical Chemistry</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="Fourier-Rev1-02_files/libs/clipboard/clipboard.min.js"></script>
+<script src="Fourier-Rev1-02_files/libs/quarto-html/quarto.js"></script>
+<script src="Fourier-Rev1-02_files/libs/quarto-html/popper.min.js"></script>
+<script src="Fourier-Rev1-02_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="Fourier-Rev1-02_files/libs/quarto-html/anchor.min.js"></script>
+<link href="Fourier-Rev1-02_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="Fourier-Rev1-02_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="Fourier-Rev1-02_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="Fourier-Rev1-02_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="Fourier-Rev1-02_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">The Fourier Transform in Analytical Chemistry</h1>
+</div>
+
+
+<div class="quarto-title-meta-author">
+  <div class="quarto-title-meta-heading">Authors</div>
+  <div class="quarto-title-meta-heading">Affiliations</div>
+  
+    <div class="quarto-title-meta-contents">
+    <p class="author">Marc-André Delsuc <a href="mailto:madelsuc@unistra.fr" class="quarto-title-author-email"><i class="bi bi-envelope"></i></a> </p>
+  </div>
+  <div class="quarto-title-meta-contents">
+        <p class="affiliation">
+            I.G.B.M.C., Université de Strasbourg
+          </p>
+      </div>
+    <div class="quarto-title-meta-contents">
+    <p class="author">Peter O’Connor </p>
+  </div>
+  <div class="quarto-title-meta-contents">
+        <p class="affiliation">
+            Department of Chemistry, University of Warwick
+          </p>
+      </div>
+  </div>
+
+<div class="quarto-title-meta">
+
+      
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">April 12, 2024</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="abstract" class="level1 unnumbered unlisted">
+<h1 class="unnumbered unlisted">Abstract</h1>
+<!-- Many data analysis approaches rely on Fourier transform (FT), in particular in analytical chemistry.
+FT is a formidable tool.
+Albeit the central role of FT, it remains mysterious to many.
+We present a comprehensive presentation of FT, yet accessible for non-mathematician.
+We present theory and practice aspects.
+We show example of its applications in Mass spectrometry, NMR, Infrared and other analytical approaches
+We open-up the topic to possible extension -->
+<p>Numerous data analysis methodologies heavily depend on the Fourier transform (FT), especially within analytical chemistry. FT is an incredibly potent and versatile tool, significantly influencing various scientific disciplines. Despite its prominence, FT often shrouds itself in an enigma for many. In response, we endeavour to provide an all-encompassing elucidation of FT, crafted to be comprehensible even to those not versed in advanced mathematics. This exposition embraces FT’s theoretical underpinnings and practical applications, seeking to demystify this concept. Its utility is demonstrated through examples in diverse domains, such as Mass spectrometry, Nuclear Magnetic Resonance (NMR), Infrared spectroscopy, and various other analytical techniques. Furthermore, potential extensions and applications of FT are explored, evoking the potential future developments of this formidable analytical instrument. We aim to empower novice and seasoned researchers with the knowledge and insight needed to harness FT’s transformative capabilities in their scientific pursuits.</p>
+</section>
+<section id="introduction" class="level1">
+<h1>Introduction</h1>
+<!-- ## What is the Fourier Transform  -->
+<p>The Fourier Transform (FT) is a fundamental technique for analysing signals that are generally dependent on time or space (but any other parameter is possible). It transforms a signal from the time or spatial domain to the frequency domain, revealing the frequency components that make up the signal. The FT has revolutionized spectroscopy, allowing scientists to measure and analyse spectra with unprecedented accuracy and precision.</p>
+<p>In analytical science, the FT can be used to analyse spectroscopic data from a variety of techniques, such as infrared, mass spectrometry, and nuclear magnetic resonance spectroscopy. By decomposing the signal into its constituent frequencies, one can separate specific lines, identify specific chemical compounds and quantify the amount of each compound present in a sample thanks to its linear response. The FT also brings a gain in resolution and sensitivity compared to classical scanning techniques thanks to better exploitation of the experimental time<span class="citation" data-cites="BracewellFT"><sup><a href="#ref-BracewellFT" role="doc-biblioref">1</a></sup></span>.</p>
+<p>Therefore, we present in this review the theoretical and practical aspects essential for a better understanding and usage of analytical chemistry techniques.</p>
+<section id="background-theory" class="level2">
+<h2 class="anchored" data-anchor-id="background-theory">Background theory</h2>
+<!-- 200 years ago, in 1822, Joseph Fourier published his revolutionary book, *Théorie Analytique de la Chaleur* (The Analytical Theory of Heat)[@FTFourier], which was later translated into English[@FTFreeman].
+The topic was mundane, a mathematical theory of how heat distributes and flows in solids based on Newton’s observation that heat diffusion could be described as a differential equation. -->
+<p>The fundamental breakthrough behind the Fourier Transform came from the theory of heat distributes and flows in solids<span class="citation" data-cites="FTFourier FTFreeman"><sup><a href="#ref-FTFourier" role="doc-biblioref">2</a>,<a href="#ref-FTFreeman" role="doc-biblioref">3</a></sup></span>. It was observed that, although in many cases the differential equation could not be exactly solved, the solution could be expressed as a sum of an infinite number of simpler periodic functions, and that an arbitrarily good solution could be found by taking a pre-chosen finite number of those functions. This concept that an infinite sum of simple equations could effectively solve a very complex equation, to as accurate a solution as you want, is incredibly important and core to many, if not most, of the solutions in modern mathematics, physics, chemistry, engineering, medicine, and technology. It is a perfect example of how basic, fundamental science can often have profound effects throughout the sciences well beyond the initial scope of the project and a keen reminder that basic science is where the big, long-term impacts come from.</p>
+<p>In Fourier’s case, the solution to heat diffusion within a solid was an infinite series of sinusoidal functions which were bound to the temperatures at the physical edges of the solid, which later became known as the Fourier series. This concept, if considered in the opposite direction, also means that the solution to the equation is a sum of a set of “signals” of carefully defined frequency, phase, and amplitude, which became the foundation of what is today known as the Fourier Transform (FT).</p>
+<p>The FT is actually extremely common to see in real life. Diffraction patterns of sea waves entering a harbour or rainbows reflected from a body of water or rain droplets are a filtered and distributed set of sinusoidal waves. The classic cinematic effect of wheels or propellers appearing to stop and start to rotate backwards as they speed up is an expression of the <strong>Nyquist criterion</strong> discussed below in <a href="#sec-expe" class="quarto-xref">Section&nbsp;2</a>. The star-like diffraction patterns that you see when looking at distant lights at night is due to the errors in the Nyquist discretization of the signal by the light sensitive cells on the retina of your eye, which is effectively a biological digitization of the signal. Many, if not most, real-world physical phenomena are expressible as a series of a discrete set of periodic functions.</p>
+<section id="sine-and-cosine" class="level3">
+<h3 class="anchored" data-anchor-id="sine-and-cosine">Sine and Cosine</h3>
+<p>Periodic systems are naturally described with the sine and cosine functions. They are both periodic with a period of <span class="math inline">\(2\pi\)</span>. As an example, the time evolution of the position <span class="math inline">\(x\)</span> of a pendulum oscillating slightly around its rest position with a period <span class="math inline">\(P\)</span> is described by <span id="eq-1"><span class="math display">\[x = a \sin (2 \pi \frac t P) \tag{1}\]</span></span> or <span id="eq-2"><span class="math display">\[x = a \sin (2 \pi f t ) \tag{2}\]</span></span> where <span class="math inline">\(f\)</span>, the inverse of the period, is the frequency of the oscillation, expressed in sec<sup>-1</sup> or Hz.</p>
+</section>
+<section id="complex-numbers-the-complex-plane-phase-and-magnitude" class="level3">
+<h3 class="anchored" data-anchor-id="complex-numbers-the-complex-plane-phase-and-magnitude">Complex numbers, the complex plane, phase and magnitude</h3>
+<p>Complex numbers are an alternate way of describing rotation and are widely used in FT theory. They are an extension of the classical (real) numbers, by adding the imaginary number <span class="math inline">\(i\)</span> defined such as <span class="math inline">\(i^2 = -1\)</span>, something which is not possible with classical numbers. Multiples of <span class="math inline">\(i\)</span> are imaginary numbers, and complex numbers (usually noted <span class="math inline">\(z\)</span>) are the sum of a real and an imaginary number: <span id="eq-3"><span class="math display">\[ z = a + ib \tag{3}\]</span></span> where <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> are real numbers. Any complex value <span class="math inline">\(z\)</span> has a conjugate value, noted <span class="math inline">\(z^*\)</span> defined as: <span id="eq-conjugate"><span class="math display">\[ z = a + ib \qquad z^* = a -ib \tag{4}\]</span></span> Complex numbers can be added and multiplied using natural rules as follows: <span id="eq-4"><span class="math display">\[z_1 +&nbsp;z_2 = (a_1 + a_2)  +  i (b_1 + b_2) \tag{5}\]</span></span> and <span id="eq-5"><span class="math display">\[z_1 \times&nbsp;z_2 = (a_1 a_2 - b_1 b_2)  +  i (a_1 b_2 + b_1 a_2) \tag{6}\]</span></span></p>
+<p>These quantities can be very simply represented on a plane, as illustrated on <a href="#fig-cpxplane" class="quarto-xref">Figure&nbsp;1</a>. From this diagram, an alternative expression of <span class="math inline">\(z\)</span> in terms of modulus <span class="math inline">\(R\)</span> (or length) and its angle <span class="math inline">\(\theta\)</span> comes naturally.</p>
+<p><span id="eq-6"><span class="math display">\[z = a + i x = R (\cos \theta  +&nbsp;i \sin \theta) \tag{7}\]</span></span></p>
+<div id="cell-fig-cpxplane" class="cell" data-execution_count="2">
+<div class="cell-output cell-output-display">
+<div id="fig-cpxplane" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-cpxplane-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="Fourier-Rev1-02_files/figure-html/fig-cpxplane-output-1.png" width="351" height="185" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-cpxplane-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: A complex plane representation, showing the real (horizonta axis) and imaginary (vertical axis) parts. The position of the value <span class="math inline">\(1, -1, i, -i\)</span> are marked as black dots. The arbitrary complex number <span class="math inline">\(z\)</span> is shown as a red dot. Its real and imaginary components <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> are shown projected onto their respective axes on the left scheme. The amplitude <span class="math inline">\(R\)</span> and the phase <span class="math inline">\(\phi\)</span> are shown on the right scheme
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="sec-euler" class="level3">
+<h3 class="anchored" data-anchor-id="sec-euler">Euler formula</h3>
+<p>The following expression known as the Euler formula, plays a central role: <span id="eq-7"><span class="math display">\[\exp (ix) = \cos x + i \sin x \tag{8}\]</span></span> or <span id="eq-euler"><span class="math display">\[e^{ix} = \cos x  +&nbsp;i \sin x \tag{9}\]</span></span></p>
+<p>Putting an imaginary number as the exponent might seem a little strange, however the potential of this formula lies in the easy expression of the geometric interpretation of complex numbers presented in <a href="#fig-cpxplane" class="quarto-xref">Figure&nbsp;1</a>.</p>
+<p><span id="eq-8"><span class="math display">\[z = R (\cos \theta  +&nbsp;i \sin \theta) = R e^{i \theta} \tag{10}\]</span></span></p>
+<p>which greatly simplifies the expression of conjugation and complex multiplication:</p>
+<p><span class="math display">\[z = R e^{i\theta} \qquad  z^* = R e^{-i\theta}\]</span> <span id="eq-9"><span class="math display">\[z_1 \times&nbsp;z_2 = R_1 R_2 e^{i(\theta_1 + \theta_2)} \tag{11}\]</span></span></p>
+<p>where we see that the moduli are multiplied, while the angles or added. Thus multiplication by a complex number of modulus 1 and angle <span class="math inline">\(\phi\)</span> simply applies a rotation by this angle <span class="math inline">\(\phi\)</span>, allowing a very simple expression for plane rotations around the origin.</p>
+</section>
+</section>
+</section>
+<section id="sec-expe" class="level1">
+<h1>Experimentation</h1>
+<section id="definitions-and-properties" class="level2">
+<h2 class="anchored" data-anchor-id="definitions-and-properties"><!-- The FT - --> Definitions and properties</h2>
+<section id="overlap-properties" class="level3">
+<h3 class="anchored" data-anchor-id="overlap-properties">Overlap properties</h3>
+<p>The Fourier transform is effectively a calculation of the overlap integrals of a signal with a set of pre-chosen sine waves. Imagine a time signal <span class="math inline">\(s\)</span> composed of a pure sine evolution from 0 to 5 seconds, with the frequency <span class="math inline">\(F_o\)</span>, as shown in solid black in <a href="#fig-integral" class="quarto-xref">Figure&nbsp;2</a>. The multiplication of this signal <span class="math inline">\(s\)</span> by a second sine function with another frequency (in dashed black in <a href="#fig-integral" class="quarto-xref">Figure&nbsp;2</a>) creates a complex evolution shown in dotted black. The area under this resultant curve (the blue minus the red in the figure) is close to zero because the positive and negative areas nearly cancel each other. On the other hand, multiplying with a frequency close to the frequency of the signal <span class="math inline">\(s\)</span>, as in <a href="#fig-integral" class="quarto-xref">Figure&nbsp;2</a> b/, results in a large positive area.</p>
+<div id="cell-fig-integral" class="cell" data-execution_count="3">
+<div class="cell-output cell-output-display">
+<div id="fig-integral" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-integral-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="Fourier-Rev1-02_files/figure-html/fig-integral-output-1.png" width="546" height="395" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-integral-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Examples of overlap integrals between a main sine wave <span class="math inline">\(s\)</span> (black) and an additional one (dashed). In the upper panel a) the two frequencies are significantly different, while in the lower panel b) they are quite close. The result of the product of both sinusoids is shown as coloured areas, with positive values coloured blue and the negative ones red. The resulting overlap integral is the signed sum of all the areas, and is larger when both frequencies are close to each other, c) in the case of a signal shifted in time, the area may be null even if the frequencies match.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="the-integral-definition-of-the-ft" class="level3">
+<h3 class="anchored" data-anchor-id="the-integral-definition-of-the-ft">The integral definition of the FT</h3>
+<p>The property described above enlightens the classical definition of the FT. Assuming a signal described by the function <span class="math inline">\(s(t)\)</span>, its spectrum is given by the FT as a function of the frequency <span class="math inline">\(S(f)\)</span> (here we’ll use the case of the letters to denote the pair made by a function and its FT), and is given by:</p>
+<p><span id="eq-ftdef"><span class="math display">\[ \text{FT}[s(t)] = S(f) =  \int_{-\infty}^{+\infty} s(t) e^{-2i \pi f t} dt  \tag{12}\]</span></span></p>
+<p>where <span class="math inline">\(f\)</span> is the frequency (expressed in Hz for instance). <span class="math inline">\(S(f)\)</span> is usually called the <em>Spectrum</em> of <span class="math inline">\(s(t)\)</span>. It is important to note that the frequency <span class="math inline">\(f\)</span>, like the time <span class="math inline">\(t\)</span> in <a href="#eq-ftdef" class="quarto-xref">Equation&nbsp;12</a>, goes from <span class="math inline">\(-\infty\)</span> to <span class="math inline">\(+\infty\)</span>.</p>
+<!-- Note how the expression under the integral sign is equivalent to the multiplication described in @fig-integral - since $e^{i f t}$ is the complex function built from $\cos f t$ and $\sin f t$.
+This exemplifies how the resulting function $S(f)$ presents a maximum for every frequencies present in $s(t)$
+Because of the imaginary exponent, the $S(f)$ spectrum has complex values.
+So maxima in the spectrum have to be understood in modulus. -->
+<p>The expression under the integral sign performs the computation seen in <a href="#fig-integral" class="quarto-xref">Figure&nbsp;2</a>. The signal <span class="math inline">\(s(t)\)</span> is multiplied by a complex wave of frequency <span class="math inline">\(-f\)</span> <!-- (remember that $e^{-2i \pi f t}$ is actually $\cos(-2 \pi f t) + i \sin(-2 \pi f t)$  --> ( remember the Euler notation in <a href="#eq-euler" class="quarto-xref">Equation&nbsp;9</a> ), the figure displaying only the real part of the term. The integral symbol expresses the computation of the (signed) area under the curve over the signal (the infinities in the expression are the formal mathematical expression, but the measurement time is of-course finite). As in <a href="#fig-integral" class="quarto-xref">Figure&nbsp;2</a> b/ the resulting function <span class="math inline">\(S(f)\)</span> presents a maximum for every frequencies present in <span class="math inline">\(s(t)\)</span>. Because of the imaginary exponent, the <span class="math inline">\(S(f)\)</span> spectrum has complex values, in cases such as <a href="#fig-integral" class="quarto-xref">Figure&nbsp;2</a> c/, the value of the integral is mostly imaginary. For this reason, the spectrum is usually presented in magnitude when the phase of the signal is unknown.</p>
+<p>In symmetry, the time signal <span class="math inline">\(s(t)\)</span> can be real or complex with no change in the definition, in certain experimental, NMR in particular, the measure is indeed complex, with some implication on the experimental set-up.</p>
+<p>The great strength of the FT is that it is fully invertible, meaning that you can also compute <span class="math inline">\(s(t)\)</span> from <span class="math inline">\(S(f)\)</span>, with FT<sup>-1</sup>() differing from FT() only by an inverted sign:</p>
+<p><span id="eq-ftm1def"><span class="math display">\[ \text{FT}^{-1}[S(f)] = s(t) =  \int_{-\infty}^{+\infty} S(f) e^{2i \pi f t} df  \tag{13}\]</span></span></p>
+</section>
+<section id="worked-example" class="level3">
+<h3 class="anchored" data-anchor-id="worked-example">Worked example</h3>
+<p>With the definitions above, we can now compute the FT of a signal. Let us posit a signal composed of <span class="math inline">\(K\)</span> different components with different characteristic frequencies <span class="math inline">\(f_k\)</span> and amplitudes <span class="math inline">\(A_k\)</span>, starting at time <span class="math inline">\(t=0\)</span> with a phases <span class="math inline">\(\phi_k\)</span>, and decaying with different time constants <span class="math inline">\(\tau_k\)</span>. This signal <span class="math inline">\(s(t)\)</span> can be written in complex notations as: <span id="eq-12"><span class="math display">\[s(t) = \sum_k^K A_k e^{-\frac t {\tau_k}} e^{ i (2\pi f_k t +&nbsp;\phi_k)}  \tag{14}\]</span></span> Note that the signal components can reorganized as the product of a time independent term and a time dependent term, both of them complex, as follows: <span id="eq-12cpx"><span class="math display">\[s(t) = \sum_k^K A_k e^{i\phi_k} \; e^{t (-\frac 1 {\tau_k} + i 2\pi f_k ) }  \tag{15}\]</span></span> The time independent term <span class="math inline">\(A_k e^{i\phi_k}\)</span> is the complex amplitude of the compnent, while the complex value <span class="math inline">\(e^{(-\frac 1 {\tau_k} + i 2\pi f_k )}\)</span> which acts on the time, fully caracterizes the time evolution. <!-- ; this quantity is sometimes called the caracteristic pole of the component. --></p>
+<div id="cell-fig-ft1" class="cell" data-execution_count="4">
+<div class="cell-output cell-output-display">
+<div id="fig-ft1" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-ft1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="Fourier-Rev1-02_files/figure-html/fig-ft1-output-1.png" width="692" height="417" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ft1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: The real time signal with three components and its Fourier Transform. The three components are separated in the upper panel so one can distinguish them clearly, ranging from the highest frequency (red, top) down to the lowest one (blue). The black curve displays the time signal, which is the sum of the three components. Observe how the three different frequencies superimposed in the time domain are well separated in the spectrum, and how a faster signal decay corresponds to a wider line in the spectrum.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p><a href="#fig-ft1" class="quarto-xref">Figure&nbsp;3</a> shows the real part of this signal with three components, along with the real part its spectrum <span class="math inline">\(S(f)\)</span> <em>(check <a href="#fig-causal" class="quarto-xref">Figure&nbsp;4</a> and the associated discussion for a description of the imaginary part of the spectrum)</em>. The lower panel shows the result of the FT of this time signal. We can see the three frequencies well separated in the spectrum. The longest running component (red, high frequency) has a sharp profile in the frequency spectrum, whereas the other components give rise to broader lines because of faster decays.</p>
+<p>It should be stressed that FT analysis makes the central assumption that frequencies in the signal are not varying.</p>
+<p>The example presented here is typical of signals measured from a source where all signals have a defined phase at the origin (here chosen to be null) and have an amplitude which decays away from this origin. This is the case in excitation methods such as NMR or FTMS, as well as in interferometry. In contrast, signals originated from audio, EEG, or environmental measurements do not usually have a clear <span class="math inline">\(t=0\)</span> origin or a well defined envelop, and their FT requires additional steps for obtaining a correct spectrum.</p>
+</section>
+<section id="sec-reciprocal" class="level3">
+<h3 class="anchored" data-anchor-id="sec-reciprocal">Reciprocal domains</h3>
+<p>The main effect of the FT is to compute an alternate view of the data-set. In the example above, the time signal, expressed in seconds, produces a frequency spectrum in Hz (which is defined as sec<sup>-1</sup>). The same kind of relation can be found in all experimental methods relying on FT.</p>
+<!-- |Analysis type |Experimental method| Original signal (units)| Transformed signal (units) |
+| --- | --- | --- | --- |
+| Frequency analysis |NMR, FTMS| Time (sec) |Frequency (Hz)|
+| Interferometry | FTIR | Wavelength (μm) | Fringe count (cm^-1^)|
+| Crystallography | XRD | Atom coordinates (Å) | Diffraction pattern (Å^-1^) | -->
+<table class="table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Analysis type</th>
+<th>Experimental method</th>
+<th>Original signal (units)</th>
+<th>Transformed signal (units)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Frequency analysis</td>
+<td>NMR, FTMS</td>
+<td>Time (sec)</td>
+<td>Frequency (Hz)</td>
+</tr>
+<tr class="even">
+<td>Interferometry</td>
+<td>FTIR</td>
+<td>Wavelength (μm)</td>
+<td>Fringe count (cm<sup>-1</sup>)</td>
+</tr>
+<tr class="odd">
+<td>Crystallography</td>
+<td>XRD</td>
+<td>Diffraction pattern (Å<sup>-1</sup>)</td>
+<td>electron density map (Å)</td>
+</tr>
+</tbody>
+</table>
+<p>For this reason, these two ways of representing the data are called reciprocal domains. Because the FT by itself does not remove nor add any information to the data, these two representations can be seen as two different views of the same information, as if related by some kind of rotation around a mysterious axis, in a high dimensional space. This “rotation” aspect of the FT is even reinforced by the fact that <a href="#eq-ftdef" class="quarto-xref">Equation&nbsp;12</a> and <a href="#eq-ftm1def" class="quarto-xref">Equation&nbsp;13</a> are related by a sign inversion, as would a rotation and its inverse be related on the 2D&nbsp;plane or 3D space.</p>
+</section>
+</section>
+<section id="the-digital-ft" class="level2">
+<h2 class="anchored" data-anchor-id="the-digital-ft">The Digital FT</h2>
+<section id="sec-US" class="level3">
+<h3 class="anchored" data-anchor-id="sec-US">Uniform data sampling</h3>
+<p>So far, we have considered only continuous signals described by continuous functions. However, this signal is usually sampled and digitised in order to be handled numerically in a computer system. At this stage, we will only consider a regular sampling, characterised by a periodic sampling every <span class="math inline">\(\Delta t\)</span> or by its sampling frequency <span class="math inline">\(F_S = \frac{1}{\Delta t}\)</span>. With such a sampling, <span class="math inline">\(F_{max}\)</span>, the <em>Nyquist criterion</em> states that the largest frequency in the signal that can be faithfully recovered is only half of the sampling frequency.</p>
+<p>Signals with a frequency greater than <span class="math inline">\(F_{max}\)</span> cannot be analysed correctly and will appear folded back ( or <em>aliased</em> ) into the <span class="math inline">\([ 0..F_{max} ]\)</span> window. <em>(Think of a signal with a frequency close to <span class="math inline">\(F_S\)</span>, if we only have the sampled points, it is not possible to discern from a slowly varying one).</em> This frequency window defines the measure <em>spectral width</em> <span class="math inline">\(SW\)</span>.</p>
+<p>The spectral width <span class="math inline">\(SW\)</span> is related to the sampling rate: <span id="eq-nyquist"><span class="math display">\[ SW&nbsp;= \frac{1}{2&nbsp;\Delta t} \qquad \text{or} \qquad \Delta t = \frac{1}{2 SW} \tag{16}\]</span></span> <a href="#eq-nyquist" class="quarto-xref">Equation&nbsp;16</a> is known as the Nyquist-Shannon theorem, and the rate <span class="math inline">\(\Delta t\)</span> is called the Nyquist sampling rate.</p>
+</section>
+<section id="the-discrete-fourier-transform" class="level3">
+<h3 class="anchored" data-anchor-id="the-discrete-fourier-transform">The Discrete Fourier Transform</h3>
+<p>FT, <em>as <a href="#eq-ftdef" class="quarto-xref">Equation&nbsp;12</a>,</em> can produce the spectrum of a sequence of regularly spaced samples over a given time by using the definition above. However, this would produce a continuous function expanding to infinity that a computer cannot handle easily.</p>
+<p>It is possible to represent this spectrum with a sequence of values <span class="math inline">\(S_k\)</span> of the same length as the initial dataset, regularly sampling the continuous spectrum with a spacing <span class="math inline">\(\Delta f\)</span>.</p>
+<p>The <strong>Discrete Fourier Transform</strong> (or DFT) is the numeric operation which transforms the sampled (discrete) series into its discrete spectrum.&nbsp; It is equivalent in many points to the analytical FT and shares most of its characteristics, with the notable exception of the Nyquist theorem presented above, a property of the sampling operation, not of the FT itself.</p>
+<p>The operation is linear and can be expressed as a multiplication of the initial dataset with a <span class="math inline">\(N \times N\)</span> square matrix. For a sequence <span class="math inline">\(s_n\)</span> of length <span class="math inline">\(N\)</span>, its DFT <span class="math inline">\(S\)</span> is a series given by : <span id="eq-dft"><span class="math display">\[S_k = \frac{1}{\sqrt N} \sum_{n=0}^{N-1} e^{-2i\pi \frac{kn}{N}} s_n \tag{17}\]</span></span></p>
+<p><span class="math inline">\(S\)</span> and <span class="math inline">\(s\)</span> are complex series, but the imaginary component of <span class="math inline">\(s\)</span> may well be null. This expression is invertible, its inverse being simply defined as: <span id="eq-dftm1"><span class="math display">\[s_n = \frac{1}{\sqrt N} \sum_{n=0}^{N-1} e^{2i\pi \frac{kn}{N}} S_k \tag{18}\]</span></span></p>
+<p>The <span class="math inline">\(\sqrt N\)</span> coefficient is a simple scaling factor which insures the symmetry of the expressions.</p>
+<!-- ### spectral resolution is determined by the measurement duration -->
+<p>If we acquire <span class="math inline">\(N\)</span> real points with a sampling <span class="math inline">\(\Delta t\)</span> given by <a href="#eq-nyquist" class="quarto-xref">Equation&nbsp;16</a>, we have a total acquisition time of <span class="math inline">\(T_{max} = N&nbsp;\times \Delta t\)</span>. Similarly, we have <span class="math inline">\(SW = F_{max} = N/2&nbsp;\times \Delta f\)</span>. The 1/2 comes from the fact that there are two values for each frequency (real and imaginary) because the Fourier spectrum is complex. Combining these two expressions with <a href="#eq-nyquist" class="quarto-xref">Equation&nbsp;16</a>, it comes: <span id="eq-resolution"><span class="math display">\[\Delta f = \frac 1 {T_{max}} \tag{19}\]</span></span> which tells that the digital resolution of the spectrum is related to total acquisition time. This relation is the equivalent of the Nyquist theorem for the frequency spectrum. It is not a coincidence if this expression, in the form <span class="math inline">\(\Delta f \times  T_{max} = 1\)</span> is reminiscent with the Heisenberg uncertainty principle, and is sometimes called the Fourier uncertainty principle.</p>
+</section>
+<section id="sec-fft" class="level3">
+<h3 class="anchored" data-anchor-id="sec-fft">Fast Discrete Fourier Transform</h3>
+<p>The expression given above in <a href="#eq-dft" class="quarto-xref">Equation&nbsp;17</a> for DFT is a matrix multiplication. The computer burden for computing such an expression for a series of <span class="math inline">\(N\)</span> values is proportional to <span class="math inline">\(N^2\)</span>. This would be a problem for the computation of large series without the clever algorithm proposed by J. Cooley and J. Tukey<span class="citation" data-cites="Cooley_1965"><sup><a href="#ref-Cooley_1965" role="doc-biblioref">4</a></sup></span>, which computes the same expression with a burden that grows only in <span class="math inline">\(N&nbsp;\log_2 N\)</span>.</p>
+<p>This algorithm, called Fast Fourier Transform (or FFT), uses subtle properties of the coefficients in <a href="#eq-dft" class="quarto-xref">Equation&nbsp;17</a> and factorizes the problem on the divisors of the number of points <span class="math inline">\(N\)</span>. So it is optimal for <span class="math inline">\(N\)</span> values equal to a power of 2 and just as slow as the regular DFT when <span class="math inline">\(N\)</span> is a prime number. For this reason, it is customary to choose a power of two for the size of datasets meant to be FTed, even though most modern algorithms can accommodate nearly any value of <span class="math inline">\(N\)</span>.</p>
+<p>Thanks to FFT, it is possible on modern computers to compute the FT of datasets containing millions of points in milliseconds.</p>
+</section>
+</section>
+</section>
+<section id="sec-results" class="level1">
+<h1>Results</h1>
+<section id="ft-properties" class="level2">
+<h2 class="anchored" data-anchor-id="ft-properties">FT properties</h2>
+<p>The FT, as well as the DFT, its computer counterpart,&nbsp;possesses many properties, very useful for data analysis. Box 1 goes through a rapid survey of the most useful ones and point out their implications with the analysis process, most of these properties can be observed in the <a href="#fig-ft1" class="quarto-xref">Figure&nbsp;3</a> example.</p>
+<p><strong>Insert BOX 1 HERE</strong></p>
+<section id="symmetry-properties" class="level3">
+<h3 class="anchored" data-anchor-id="symmetry-properties">Symmetry properties</h3>
+<p>A FT spectrum is always a complex object. <!-- ^[several alternative definitions exist that do not depend on complex numbers (Hartley transform, discrete cosine transform), while valid on their own, these approaches have always to drop one are several properties of the genuine complex FT, properties important in harmonic analysis] --> Symmetries in the data impact the real and imaginary parts of the spectrum as shown in <a href="#fig-causal" class="quarto-xref">Figure&nbsp;4</a>. Data symmetric relative to <span class="math inline">\(t=0\)</span> will present a spectrum with a null imaginary part, whereas antisymmetric data will have a null real part. This is a result of the symmetry presented by the underlying sine and cosine functions, such that <span class="math inline">\(f(t) = (f(-t))^*\)</span> (symmetry of a <em>Hermitian function</em> ).</p>
+<div id="cell-fig-causal" class="cell" data-execution_count="5">
+<div class="cell-output cell-output-display">
+<div id="fig-causal" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-causal-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="Fourier-Rev1-02_files/figure-html/fig-causal-output-1.png" width="566" height="447" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-causal-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4: Relations between the symmetries in the signal (left) and the properties of the FT spectrum (right). A <em>causal</em> signal is defined as being null for the negative side of the <span class="math inline">\(x\)</span> axis, and can be seen as the sum of an even and an odd signals above; a real signal always produces a spectrum with corresponding positive and negative frequencies.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>These symmetry relationships can be summerized as follows:</p>
+<table class="table">
+<colgroup>
+<col style="width: 23%">
+<col style="width: 45%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>direct domain</th>
+<th>reciprocal domain</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>pure real</td>
+<td>symmetrical real part<br>
+antisymmetrical imaginary part</td>
+</tr>
+<tr class="even">
+<td>pure imaginary</td>
+<td>antisymmetrical real part<br>
+symmetrical imaginary part</td>
+</tr>
+</tbody>
+</table>
+<p>Many more symmetry properties can be found from these simple rules by using the linearity of the FT.</p>
+<p>This has a strong impact on data acquired from a system which requires some initial perturbation (such as the Radio-Frequency pulse in NMR or the injection from the C-trap in Orbitrap); this kind of signal is called <em>causal</em> because of the event which creates them. In these spectra, the spectrum’s real and imaginary parts are linked, presenting a pair of related shapes. In <a href="#fig-causal" class="quarto-xref">Figure&nbsp;4</a> you see such a pair for a signal exponentially decaying after excitation. In the case of a null initial phase, the real part is a symmetric line shape called <em>absorptive</em>, and the imaginary part is antisymmetric and called <em>dispersive</em>. They are related by the Hilbert transform. The absorptive shape is narrower than the dispersive one thus displaying a higher resolution. This implies that a magnitude spectrum, where <span class="math inline">\(S\)</span> is replaced by <span class="math inline">\(\sqrt{Re(S)^2 + Im(S)^2}\)</span> - something you might have to do if the phase of the signal is unknown - presents a FWHM <em>(Full Width at Half Maximum)</em> about twice as large.</p>
+<!-- *a bit theoretical, I put this here, even though it is not
+mandatory (we'll see) as it is not related to digital FT,
+and allows to present causality easily.* -->
+</section>
+<section id="convolution-theorem" class="level3">
+<h3 class="anchored" data-anchor-id="convolution-theorem">Convolution theorem</h3>
+<p>The convolution is an operation (noted <span class="math inline">\(\star\)</span>) on two functions (<span class="math inline">\(f\)</span> and <span class="math inline">\(g\)</span>) that produces a third function (<span class="math inline">\(f \star g\)</span>) that expresses how the shape of one is modified by the other. It is formally defined as <span id="eq-convol"><span class="math display">\[(f \star g)(t) = \int_{-\infty}^\infty f(t)g(t-\tau)d\tau = \int_{-\infty}^\infty f(t-\tau)g(t)d\tau \tag{20}\]</span></span> where both forms lead to the same result.</p>
+<p>The convolution theorem states that this operation has an intrinsic link with the Fourier transform. If we note <span class="math inline">\(F\)</span> and <span class="math inline">\(G\)</span> the FT of <span class="math inline">\(f\)</span> and <span class="math inline">\(g\)</span>, this theorem states that <span id="eq-theoconvol"><span class="math display">\[ FT(f \star g) = F \times G \qquad \text{and} \qquad FT(f \times g) = F \star G \tag{21}\]</span></span></p>
+<p>multiplying a signal by some function results in the <em>convolution</em> of their respective FTs. This convolution property has deep implication in every day practice, and is worth examining.</p>
+<p>The following section will use the implication of this relationship for the optimal design of experimental and processing conditions.</p>
+</section>
+</section>
+<section id="shape-pairs" class="level2">
+<h2 class="anchored" data-anchor-id="shape-pairs">Shape pairs</h2>
+<p><a href="#fig-pairs" class="quarto-xref">Figure&nbsp;5</a> presents some functions and the result of their FTs. The shapes presented are common in analytical chemistry signals, where we usually search for narrow lines with various shapes, frequencies, noise, etc..</p>
+<div id="cell-fig-pairs" class="cell" data-execution_count="6">
+<div class="cell-output cell-output-display">
+<div id="fig-pairs" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-pairs-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="Fourier-Rev1-02_files/figure-html/fig-pairs-output-1.png" width="548" height="539" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-pairs-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5: pairs of functions and their FT; in red/blue: the real and imaginary parts of the spectrum, in dashed black: modulus of the complex spectrum
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>The FT spectrum of a <strong>pure cosine</strong> signal with frequency <span class="math inline">\(f\)</span> is a pair of delta functions. In the example presented above, as the wave extends over the whole measurement, and is real (no imaginary part) it produces a pair of frequencies, positive and negative, which cannot be discriminated (see <a href="#fig-causal" class="quarto-xref">Figure&nbsp;4</a>).</p>
+<p>This basic spectrum is then modulated by the evolution of the intensity during the measurement. The delta function is convolved with the FT of this evolution, so the lines in the spectrum acquire a certain line-shape. Several classical cases are considered here:</p>
+<ul>
+<li>a <strong>Gaussian decay</strong> of width <span class="math inline">\(w\)</span> produces a Gaussian shape of width <span class="math inline">\(W = \dfrac{\pi^2}{w}\)</span>. So the product of both widths is the constant <span class="math inline">\(\pi^2\)</span>, yet another case of the compaction/dilation property.</li>
+<li>similarly an <strong>exponential decay</strong> produces a Lorentzian shape. Lorentzian lines have notably larger tails than Gaussian lines and a more pointy shape. For a decay rate of <span class="math inline">\(k\)</span>, the FWHM <em>(Full Width at Half Maximum)</em> of the Lorentzian is <span class="math inline">\(\dfrac{2 \pi}{k}\)</span></li>
+<li>the <strong>gate function</strong> or <em>box-car</em> function, which describes the case where the measurement is stopped (values set to zero) before the extinction of the resonance, creates a very typical oscillating line shape, called <em>sinc</em> characteristic of a truncated signal. For a duration of <span class="math inline">\(\tau\)</span>, the FWHM of the shape is <span class="math inline">\(\approx \dfrac{0.6}{\tau}\)</span>.</li>
+<li><strong>white noise</strong> is a random signal, with no characteristic frequency. Its FT is also a white noise.</li>
+</ul>
+</section>
+<section id="acquisition-in-practice" class="level2">
+<h2 class="anchored" data-anchor-id="acquisition-in-practice">Acquisition in practice</h2>
+<p>The various notions presented above have a deep impact on the way an experiment should be set-up, processed and analysed.</p>
+<section id="effects-of-the-discretization" class="level3">
+<h3 class="anchored" data-anchor-id="effects-of-the-discretization">Effects of the discretization</h3>
+<p>The Shannon-Nyquist theorem (<a href="#eq-nyquist" class="quarto-xref">Equation&nbsp;16</a>), is a direct result of the discretization of the real signal data. If you only acquire the signal at specific, pre-defined time-steps, you are going to miss any subtleties in the data that happen faster than that, and sometimes those events, if they are periodic, will actually appear to occur at a much lower frequency, effectively ‘folded back’ onto the frequency range of <span class="math inline">\(0\ldots F_{max}\)</span>. In videos, if the frame-rate of the camera is slower than the event, birds can appear to be flying without flapping their wings, wheels and propellers can appear to stop or rotate backwards, and runners’ legs can appear to be running backwards although they are clearly moving forwards. These admittedly odd effects occur because the real event is being recorded at discrete time steps that are slower than the actual event. It turns out, the Shannon-Nyquist theory defines that to most-accurately record a time-varying signal, the digitization time-step must be at least <span class="math inline">\(2 \times\)</span> faster than the event. For real analytical signals, that means that you have to choose the acquisition rate at least <span class="math inline">\(2 \times\)</span> higher than the maximum frequency signal you expect to see. In any case, it is always advised to use a high quality low-pass filter to remove signals above the highest expected frequency, usually the Nyquist frequency, to avoid spurious signals and noise folding back into the spectrum.</p>
+<p>Another effect of sampling a signal at discrete time-steps is that most signals will not exactly match to an integer multiple of your chosen acquisition rate, so they will ‘fall between the cracks’ of the sampling. This will result in the signals being imperfectly represented in the digitized signal, which expresses after FT as a skewed or noisy and clearly imperfect spectrum, and often can result in odd ‘triangular’ or ‘boxy’ peaks. For decaying signals this leads to an effect that looks like a phase error, zerofilling will restore a symmetrical line-shape is used</p>
+<p>Provided the Nyquist criterion is met, then after the FT the signal will be composed of peaks as above in Figures 3-5. The width of each peak is defined by the length of the signal, limited either by the acquisition length for a stationary signal, or by the decay of the signal, whichever is shorter. So, to get high resolution (skinny peaks), you need to have a long, stable signal in the time domain, and a suitably long measurement, to insure a sufficient sampling of the frequency spectrum, as the digital resolution of the spectrum is governed by the length of the acquisition window rather than the the actual number of samples (check <a href="#eq-resolution" class="quarto-xref">Equation&nbsp;19</a>).</p>
+</section>
+<section id="resolution" class="level3">
+<h3 class="anchored" data-anchor-id="resolution">Resolution</h3>
+<p>For resolution purposes on digitized signals, the length of the signal, in time, is equal to the time-step multiplied by the number of data points; however, that assumes that the signal has not decayed. All signals decay, which is why the normal signal model equations generally include a decaying exponential term, <span class="math inline">\(e^{-t/\tau}\)</span>. The physical meaning of this decay varies with the experiment, but it is always due to a decrease in signal intensity over time either by amplitude decay or by dephasing of many overlapping signals. The latter, dephasing, results in destructive interference in which the signals cancel out.</p>
+<p>For mass spectrometry, the signal decay is usually due to background gas collisions which result in both amplitude decrease as the ion signal slows down and in dephasing as the ion cloud packet experiences random collisions. Furthermore, variation of the electric or magnetic field can cause the individual ions to experience transient variation in frequencies which also causes dephasing, and the most common variation in the electric field is caused by the time-varying coulombic repulsion of the many ions in the packet against each other, an effect known as ‘space-charge’. For nuclear magnetic resonance, signal decay is normally caused by tiny variations in the local magnetic environments of individual spins, either because of magnetic field inhomogeneities or other nearby magnetic nuclei. These fluctuations creates a decoherence of the spins and a decay of the experimental signal.</p>
+<p>Regardless of the physical forces that cause the signal decay, for high resolution it is important that the signal life time is equal or shorter than the detected transient length. For maximum resolution, the usual ‘rule of thumb’ is that the detected transient length should be approximately <span class="math inline">\(3\tau\)</span>.<span class="citation" data-cites="Qi_2014"><sup><a href="#ref-Qi_2014" role="doc-biblioref">5</a></sup></span> Thus, given the chosen data acquisition rate (keeping the Nyquist limit, above in mind), the total number of data points required is readily calculated – if the operator knows the value of <span class="math inline">\(\tau\)</span>. If this value is not known, it is straightforward to estimate by acquiring a longer-than-needed transient and shortening the transient either by apodisation (see below) or truncation and plotting the intensity of the spectral peaks versus the length or time-segment of the time-domain signal.</p>
+<p>Alternatively, if a particular resolution is required, the length of the transient can be readily calculated. The number <span class="math inline">\(N\)</span> of points to acquire should be large enough to allow <span class="math inline">\(T_{max} = N \Delta t\)</span> to accommodate the longest expected signal (and thus the sharpest peak), and <a href="#eq-resolution" class="quarto-xref">Equation&nbsp;19</a> ensures that the spectral resolution will be sufficient to resolve this signal.</p>
+</section>
+<section id="noise-and-signal-to-noise-ratio" class="level3">
+<h3 class="anchored" data-anchor-id="noise-and-signal-to-noise-ratio">Noise and Signal-to-Noise Ratio</h3>
+<p>The Fellgett effect, presented in <strong>Box 1</strong>, states that after the FT, all signal peaks improve in both resolution and signal/noise as the signal length increases; however, this effect only occurs if the signal does not decay and if the noise is random (discussed below). Furthermore, the Fellgett effect actually removes the expected trade-off between resolution and intensity, but only while the signal is stable. While instabilities in intensities do not impact the sensitivity, instabilities in phase or frequency <em>(which is actually the same)</em>, create a loss of signal coherence over distant domains of the signal and destroy the sensitivity gain obtained with longer measurements. Such instabilities can come from many sources during the experiment, and for a maximum signal sensitivity as well as resolution, it is important that signal instabilities are minimized. The sensitivity is usually measured in terms Signal-to-Noise ratio (SNR), by comparing, in the spectrum, the intensity of a frequency signal to the background noise observed in the same spectrum.</p>
+<p>Noise in measurements comes in many varieties, and we will not deal with them all here, but two types of noise are very important. Random noise, often from thermal noise in resistors in the preamplifiers, is always present in the signal. <a href="#fig-pairs" class="quarto-xref">Figure&nbsp;5</a> shows that the spectrum of such random noise is also random, and so this type of noise is called ‘white’ if there is no preferential frequency domain and its spectrum is statistically flat.</p>
+<p>The signal intensity in the time domain can often be lower than the noise level in that same domain, but because the FT integrates signal over time, the signal (provided it is stable) will grow linearly with the detected time, but the noise (because it is random) will grow only as the square-root of the detected time, so the SNR of all signals will increase over time as the square-root of the detected time duration of the signal.</p>
+<p>The second major noise source in Fourier spectroscopies is interference from nearby signals in the similar frequency range as your experiment. These interference signals can vary from radio stations, to radio-frequency (RF) interference from lighting and other electronics in the vicinity, to RF interferences within the power supplies or other parts of the measurement equipment, such as turbo-molecular pumps. For example, mobile telephones can cause significant RF interference noise as they are searching for a nearby signal. These signals are not random and cause unwanted spikes in the measured signals, but they can also often be carefully eliminated by good shielding.</p>
+</section>
+<section id="co-adding-scans" class="level3">
+<h3 class="anchored" data-anchor-id="co-adding-scans">Co-adding scans</h3>
+<p>Consider the common case where successive measurements of the same experiment are co-added. If it is possible to ensure that the signal of interest is coherent from one measurement to the next (same frequency, but also same phase, for instance because it is created by a carefully timed excitation), the signal will directly accumulate. On the other hand, because of its incoherence nature, the noise will accumulate less efficiently, and again the SNR will improve by a factor where is here the number of accumulated scans. Thus, the Fellgett effect is very similar to co-adding scans, but the Fellgett effect occurs within a single acquisition and shows the increase of resolution and SNR simultaneously.</p>
+</section>
+<section id="stability-of-the-signal" class="level3">
+<h3 class="anchored" data-anchor-id="stability-of-the-signal">Stability of the signal</h3>
+<p>The central assumption of Fourier analysis is that the frequency is constant during the measurement. This means that any parameter that may influence the signal frequencies (temperature, vibrations, space-charge etc.) will have a major impact on the quality of the analysis.</p>
+<p>For unstable signals, alternative methods have to be considered, such as short measurements or FT over a short sliding window (Short-Time FT STFT), co-adding magnitude Fourier spectra, or non-Fourier methods such as wavelet analysis<span class="citation" data-cites="Mallat"><sup><a href="#ref-Mallat" role="doc-biblioref">6</a></sup></span> for variable frequency signals.</p>
+<p>The Fourier series discovered in Fourier’s 1822 book<span class="citation" data-cites="FTFourier"><sup><a href="#ref-FTFourier" role="doc-biblioref">2</a></sup></span> tells us that any periodic signal can be represented as an infinite series of summed sine/cosine waves. However, for most measurements, the signals of interest are not an ideal set of pure sinusoids. Non-sinusoidal characteristics may be produced from the phenomenon itself, such as non-linear interactions, but the most common sources of distortion are instrumental: signal saturation that can square off the tops of waves, ringing, asymmetry between the negative and positive parts of the signals, etc. Any such non-sinusoidal distortion of the actual signal will appear in the spectrum as further peaks in the series, usually harmonics of the primary signal with integer multiples of the fundamental signal frequency.</p>
+<p>One type of non-sinusoidal signal distortion that does not result in harmonics is a signal offset where the sine/cosine wave, which ideally is centred around zero, is now shifted up or down so that the centre is now non-zero. The FT interprets an offset as a ‘zero-frequency’ signal, commonly called a ‘DC-component’ of the signal, and so the FT frequently has a large peak at zero frequency which is the offset (see <em>special values</em> above). This offset can be removed by subtracting the average of the signal from every data point, effectively re-centring the time-domain signal prior to doing the FT. In NMR a phase alternation of the excitation pulse in a two step phase program is usually used to readily remove any such constant offset.</p>
+</section>
+</section>
+<section id="sec-processing" class="level2">
+<h2 class="anchored" data-anchor-id="sec-processing">Processing in practice</h2>
+<section id="magnitude-or-phase" class="level3">
+<h3 class="anchored" data-anchor-id="magnitude-or-phase">Magnitude or phase</h3>
+<p>An ideal signal peak after FT is represented by a pure cosine wave in the time domain, but real signals are usually a combination of sine and cosine waves, because the difference between those waves is only a phase shift – which is similar to a small shift in the detection time (see shift theorem). For this reason, the FT usually uses the exponential form, from Euler’s equation, which combines both sine and cosine waves into circularly polarised waves, from <a href="#sec-euler" class="quarto-xref">Section&nbsp;1.1.3</a>. The real, measured signal is either a linearly polarised measurement, resulting in real numbers in the signal array, or a quadrature measurement, resulting in complex numbers in the signal array. NMR typically uses quadrature detection from two orthogonal magnetic sensors, by putting the two pairs of detected signal into the real and imaginary portions of the data variables for each independent time-step. Mass spectrometry, by contrast, usually just uses one set of electric field detectors and thus generates a single array of real valued numbers for the detected signal.</p>
+<p>Nevertheless, because the real signals have a phase component and because the FT uses the exponential form which expresses each component wave as a circularly polarised wave (both sine and cosine components), the output array from the FT is an array of numbers with both real and imaginary components. If plotted directly into a plotting software like Matlab, Python, or R, the results are very confusing because all of the data points will be plotted on top of each other in a complex number representation diagram like <a href="#fig-cpxplane" class="quarto-xref">Figure&nbsp;1</a>. So, we traditionally plot either the real or the imaginary components, or we combine them by calculating the magnitude of the values as <span class="math inline">\(M(\omega) = \sqrt{R^2(\omega) + I^2(\omega)}\)</span>.</p>
+<p>However, the magnitude mode combines the peak-shapes and noise from both the real and imaginary parts of the peak. The imaginary part of the signal is usually broader and including it will decrease resolution (see <a href="#fig-causal" class="quarto-xref">Figure&nbsp;4</a> and <a href="#fig-pairs" class="quarto-xref">Figure&nbsp;5</a>). Including noise from both the real and imaginary component will increase the noise by <span class="math inline">\(\sqrt{2}\)</span> thus decreasing the signal-to-noise ratio by about 40% for every peak. Ideally, we’d like to plot only the real part of the signal to avoid these problems, but because most signals will not have an initial phase of zero, the peaks will be inherently mixed between the real and imaginary peak-shapes. However, as noted above in <a href="#sec-euler" class="quarto-xref">Section&nbsp;1.1.3</a>, any signal can be rotated by an arbitrary angle, <span class="math inline">\(\Phi\)</span>, by multiplying the signal by <span class="math inline">\(e^{i\Phi}\)</span>, so you can correct the phase of all peaks in a spectrum (provided the the phase correction is determined over the whole spectrum), and get an immediate increase in resolution and signal-to-noise for all peaks in the spectrum. Rephasing of signals has been routine in NMR for decades, but has also become relatively easy for mass spectrometry in recent years.</p>
+</section>
+<section id="apodisation" class="level3">
+<h3 class="anchored" data-anchor-id="apodisation">Apodisation</h3>
+<p>The peak-shape after the FT is a convolution of the FT of a pure sinusoidal wave (a <em>delta</em> function), the detection box range (a <em>sinc</em> function), and the FT of the damping function, <span class="math inline">\(e^{-\frac{t}{\tau}}\)</span> (a Lorentzian peak-shape, very sharp, with long tails). If the signal is almost undamped and truncated, this convolution results in side-lobe peaks in the spectrum. One simple way to suppress these side-lobes is to multiply the time-domain signal by a smooth function such as a Gaussian or a half-sine to smooth out the abrupt start and stop of the signals, prior to the FT. This multiplication is called apodisation (or windowing) and further convolves the peak-shape with the FT of the convolution function and can smooth out the side-lobes at the cost of slightly wider peaks with slightly lower resolution.<span class="citation" data-cites="Qi_2014"><sup><a href="#ref-Qi_2014" role="doc-biblioref">5</a></sup></span> See <a href="#fig-apod" class="quarto-xref">Figure&nbsp;6</a> for an illustration.</p>
+<div id="cell-fig-apod" class="cell" data-execution_count="7">
+<div class="cell-output cell-output-display">
+<div id="fig-apod" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-apod-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="Fourier-Rev1-02_files/figure-html/fig-apod-output-1.png" width="676" height="809" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-apod-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6: Effect of the apodisation: the same signal with <span class="math inline">\(f=488\)</span> Hz and a decay time <span class="math inline">\(\tau=1\)</span> second is truncated either at <span class="math inline">\(\tau/\sqrt{2}\)</span> (red), <span class="math inline">\(\tau/4\)</span> (green) or <span class="math inline">\(\tau/16\)</span>(blue), a/ b/ c/ panels show the FT of the resonance in absorption mode, and the effect of a shifted sine-bell apodisation (dashed); d/ e/ f/ panels show the same spectrum but in magnitude mode, the dotted curve shows the effect of a unshifted sine-bell; the signal in the g/ panel is the same than the red one on the top view, with 30% Gaussian noise added, h/ i/ j/ present the absorption spectrum of the signal in g/, with the noise expanded in inset; h/ no apodisation, i/ matched exponential apodisation, j/ Gaussian enhancement (see text). In all panels, the value in insert is the FWHM in Hz of the line and of the apodised versions. All FT are processed after extension with zero values (zerofilling) to <span class="math inline">\(3\tau\)</span>
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>In addition to correcting the line-shape, apodisation may affect the SNR. The noise is generally of constant amplitude along the acquisition. For a damping signal such as the top signal in <a href="#fig-apod" class="quarto-xref">Figure&nbsp;6</a>, the signal-to-noise ratio is thus decaying over the acquisition length to the point that the signal falls below the noise level at the end of the measurement. Multiplying the measured signal with a decaying function increases the weight of the regions with a large SNR, and has the effect of increasing the SNR in the spectrum.</p>
+<p>Taking the same resonance with <span class="math inline">\(\tau=1\)</span> second, but with 30% random Gaussian noise added and measured for a duration of <span class="math inline">\(3 \tau\)</span>, one can apply an <span class="math inline">\(e^{-t/\tau}\)</span> apodisation to it, the result is shown in <a href="#fig-apod" class="quarto-xref">Figure&nbsp;6</a> i/ This is equivalent to smoothing in the spectrum, which reduces the noise optimally while slightly broadening the line itself. Note the impressive gain in SNR in the spectrum vs the SNR in the time domain (where the resonance is barely visible), on the order of the square root of the number of points (here N=60.000 hence approximately 250x ).</p>
+<p>It is possible to combine the noise reduction approach to the shape narrowing with a slightly more involved operation. <a href="#fig-apod" class="quarto-xref">Figure&nbsp;6</a> j/ shows the result of an operation called Gaussian enhancement, where the dataset is multiplied by the increasing exponential <span class="math inline">\(e^{t/\tau}\)</span>, somehow removing the line-width and then apodised by the Gaussian <span class="math inline">\(e^{-(t/\tau)^2}\)</span>, reducing the noise while maintaining the line-width or even improving the tail of the line. Note that the noise is decreased, while the original line-width is nearly restored.</p>
+</section>
+<section id="zerofilling" class="level3">
+<h3 class="anchored" data-anchor-id="zerofilling">Zerofilling</h3>
+<p>Zerofilling is the common process, prior to doing the Fourier transform, to pad the measured data set with extra zero-value data points either up to the next level of <span class="math inline">\(2^n\)</span> data points to optimize the algorithm speed, or even doubling the full data set size once or several times.</p>
+<p>Zerofilling forces the digital Fourier Transform to calculate overlap integrals and hence interrogate the real data set at additional frequency points, thus interpolating additional interleaved data points between each existing pair of frequencies, without degrading the spectral resolution as the new interleaved data points are placed on the existing peak-shape. This interpolating effect is helpful in extraction of peak-shape information as well as finding the centre of a peak (known as centroiding). This effect can be seen in <a href="#fig-apod" class="quarto-xref">Figure&nbsp;6</a> where all spectra are computed on a constant number of points regardless of the length of the acquisition.</p>
+<p>The FT of <span class="math inline">\(N\)</span> real data points or of <span class="math inline">\(N/2\)</span> complex pairs of data points produces a spectrum of <span class="math inline">\(N/2\)</span> complex pairs, and thus only <span class="math inline">\(N/2\)</span> frequency channels, so you will need one level of zerofilling to have <span class="math inline">\(N\)</span> data points and not lose information, in consequence, the rule-of-thumb is to always use at least double the size of the measure by zerofilling not to loose any information.</p>
+</section>
+</section>
+</section>
+<section id="applications" class="level1">
+<h1>Applications</h1>
+<section id="fourier-transform-mass-spectrometry-ftms" class="level2">
+<h2 class="anchored" data-anchor-id="fourier-transform-mass-spectrometry-ftms">Fourier transform mass spectrometry (FTMS)</h2>
+<p>Several types of mass spectrometers use the Fourier transform to extract frequencies that are related to molecular masses from signals. The two most common of such instruments are the Fourier transform ion cyclotron resonance mass spectrometery (FTICR-MS, recently branded as ‘magnetic resonance mass spectrometry, MRMS’ by Bruker) and the Orbitrap. Other, less common FTMS instruments are the electrostatic linear ion trap (ELIT) and the Fourier-transform ion trap.</p>
+<p><em>FTICR-MS.</em></p>
+<p>The Fourier-transform ion cyclotron resonance mass spectrometers trap ions within a ‘penning trap’ inside a magnetic field<span class="citation" data-cites="Marshall_1998 Marshall_2015"><sup><a href="#ref-Marshall_1998" role="doc-biblioref">7</a>,<a href="#ref-Marshall_2015" role="doc-biblioref">8</a></sup></span>. Ions moving in a magnetic field experience the Lorentz force orthogonal to the magnetic field and to the direction of travel, which forces the ions to rotate around the magnetic field at the cyclotron frequency <span class="math inline">\(F_c\)</span>. <span id="eq-cylotron"><span class="math display">\[F_c = B_o \frac{z}{m} \tag{22}\]</span></span> Since the ions are injected at different times, the initial phase of their rotation is effectively random, and the ions are initially distributed over a range of orbital radii dependent on the ions’ injection trajectories, so the aggregated signal of these ions is both low-amplitude and the random phase causes destructive signal interference. In order to synchronize the phases and increase amplitude, a swept-frequency oscillating electric field is used to sweep the ion packets into higher radius. This swept-frequency excitation sets the initial phase of the ions in line with the timing of the frequency sweep, so that correcting for the phase shift of the ions during the Fourier transform is feasible.</p>
+<p>The peak width of signals is determined by the length of the time-domain signal, either the actual length of the signal or the length of the detected time domain window, whichever is lower. Since all signals decay over time, with a decay constant of <span class="math inline">\(\tau\)</span>, a typical rule of thumb for maximising both signal-to-noise ratio and resolution is to set the acquisition time length equal to about 2.5 – 3 times <span class="math inline">\(\tau\)</span>.</p>
+<p><em>Orbitrap™</em></p>
+<p>The Orbitrap instrument detects the oscillating ion positions within a static electric field of a pseudo-parabolic shape. The ions frequencies <span class="math inline">\(F_O\)</span> are given by <span id="eq-Orbitrap"><span class="math display">\[F_O = \sqrt{K\frac{z}{m}} \tag{23}\]</span></span> where <span class="math inline">\(K\)</span> is the force constant determined by the cavity. Ions’ phase is set by the timing of injection of the ion packets into this static electric field.<span class="citation" data-cites="Makarov_2000 Hardman_2003 Scigelova_2006"><sup><a href="#ref-Makarov_2000" role="doc-biblioref">9</a>–<a href="#ref-Scigelova_2006" role="doc-biblioref">11</a></sup></span></p>
+<p>All other properties are similar to FTICR: detection of a high resolution, high signal-to-noise spectrum requires detection of a long duration, minimally damped transient and optimal detection duration can be up to a second.</p>
+<p>Fourier transform mass spectrometers provide mass information for molecules based on frequency. Since time is extremely accurately measured these days using temperature controlled quartz crystal oscillators, these frequency measurements are extremely accurate. Furthermore, the frequency responses are almost independent of the kinetic energy or internal energy of the molecules, so there is generally insignificant peak-broadening from energy or diffusion effects. So FTMS instruments currently provide the highest possible mass accuracy and resolution available in mass spectrometry and they can be competitive in sensitivity and quantitation under the right circumstances.</p>
+<p>Orbitraps are routinely used, along with liquid chromatography (LC), for proteomics, primarily because the Orbitrap is usually a dual-detector system with one fast quadrupole linear ion trap on the front with high sensitivity but low resolution and the Orbitrap on the back with much higher resolution than the quadrupole allowing the Orbitrap to correlate the two types of data according to the elution time. The FTICR instruments however are substantially higher resolution (typically 10-fold at least) and accuracy (typically 2-3 fold), but the commercial FTICR instruments do not have the fast linear ion trap front-end, and therefore the dual-instrument correlation mentioned above is not available. Both the Orbitrap and the FTICR usually acquire one spectrum per second, which can be extended for higher resolution and sensitivity, but with a slower scan speed.</p>
+<p>FTICR is particularly effective in dealing with complex mixtures whether by whole-protein tandem mass spectrometry (otherwise known as top-down protein analysis) or from petroleum and environmental samples, or from polymer molecular weight distributions. In these cases, the superior resolution becomes key to separating the ions in a complex mixture and determining the mass of each individual ion in the spectra.</p>
+</section>
+<section id="nmr" class="level2">
+<h2 class="anchored" data-anchor-id="nmr">NMR</h2>
+<section id="physical-principles" class="level3">
+<h3 class="anchored" data-anchor-id="physical-principles">Physical principles</h3>
+<p>Some atom nuclei (such as Hydrogen, Phosphorous, or the isotope <sup>13</sup>C of Carbon) present a quantum property called spin that makes them react like tiny magnets. When a material containing such atoms is exposed to an external magnetic field, the spins are oriented by the field and present a resonance with a frequency (the Larmor frequency) proportional to the applied field, with a ratio characteristic of the atom type (the gyromagnetic ratio). The material containing the spin, when excited with an additional pulsed magnetic field tuned to the spin resonance frequency will emit in return a weak magnetic field oscillating with this frequency, the Nuclear Magnetic Resonance signal (NMR).<span class="citation" data-cites="Ernst_1992 ernst1990principles"><sup><a href="#ref-Ernst_1992" role="doc-biblioref">12</a>,<a href="#ref-ernst1990principles" role="doc-biblioref">13</a></sup></span> Atoms have different environments depending on the molecular structure (for instance, hydrogens are borne by aliphatic or aromatic carbons, by CH<sub>2</sub> CH<sub>3</sub> or hetero-atoms), these differences lead to minute resonance differences, which allows to assign the signals, and characterize atom interactions in space.<span class="citation" data-cites="W_thrich_2003"><sup><a href="#ref-W_thrich_2003" role="doc-biblioref">14</a></sup></span>. In liquids, the resonant signal has a long lifetime allowing narrow resonance lines and resolved spectra.</p>
+</section>
+<section id="experimental-procedure" class="level3">
+<h3 class="anchored" data-anchor-id="experimental-procedure">Experimental procedure</h3>
+<p>The experimental procedure is thus similar to the FT-ICR one, with an RF impulsion on the system and a free resonance detection. The detected signal is traditionally called <em>fid</em> standing for <em>free induction decay</em> as the detected signal is a magnetic induction in the detection coil. Acquisition requires specific details; in particular, the range of frequencies is usually very narrow, a brief strong pulse in the centre of this range suffices to excite the whole spectrum. <!-- The excitation is simplified, and so is the detection. --> A carrier with a frequency in the centre of the NMR spectrum is usually used to demodulate the signal and record only the frequency difference between the signal and the carrier, allowing a narrower spectral width (and a slower sampling rate). The quadrature detection mentioned in <a href="#sec-processing" class="quarto-xref">Section&nbsp;3.4</a> allows to separate positive frequencies (faster than the carrier) to negative ones (slower than the carrier), thus the spectrum goes from <span class="math inline">\(-F_{max}\)</span> to <span class="math inline">\(+F_{max}\)</span>, with a complex spectral width <span class="math inline">\(SW_c = 2F_{max}\)</span>, and so, in quadratic detection, the Nyquist-Shannon relation is modified to: <span id="eq-Nyquist-NMR"><span class="math display">\[SW_c = \frac{1}{\Delta t} \tag{24}\]</span></span></p>
+<p>The excitation with a single short pulse means that all signals start with an equivalent phase, this allows to easily obtain a absorption spectrum by correcting the global phase of the spectrum. Eventually an additional first-order phase correction linearly depend on the frequency has to be applied, related to errors in the timing of the pulse.</p>
+</section>
+</section>
+<section id="ft-infrared-spectroscopy" class="level2">
+<h2 class="anchored" data-anchor-id="ft-infrared-spectroscopy">FT Infrared Spectroscopy</h2>
+<p>Infrared (IR) spectroscopy is another analytical domain where FT has shown its advantages. IR spectroscopy measures chemical bond vibrations and carries information on the bonds’ nature, geometry and energy. The IR signal comes either from light emitted by the material or absorbed by it when the light passes through the sample. The light emitted or absorbed corresponds to the frequencies of molecular bond vibrations and rotations mode, which interact with the electromagnetic field.<span class="citation" data-cites="Berthomieu_2009"><sup><a href="#ref-Berthomieu_2009" role="doc-biblioref">15</a></sup></span></p>
+<p>In FTIR, an interferometer analyses the spectrum, which produces an interference pattern modulated by the sample. This interferogram is directly analysed by FT. In this approach, the maximum possible spectral separation is related to the maximal optical path difference (OPD) available in the interferometer. For a Michelson geometry, this corresponds to the maximal displacement of the moving mirror; for instance, following <a href="#eq-resolution" class="quarto-xref">Equation&nbsp;19</a> a 10&nbsp;cm OPD will provide a 0.1&nbsp;cm<sup>-1</sup> resolution.</p>
+<p>An accurate measure requires the displacement of the mirror to be regular and accurately monitored, and strictly equidistant sampling points are essential. It can be done, for instance, with a precisely controlled air cushion translation systems. Adding a fixed wavelength laser to the optical path allows the fringes created by this light source to serve as a ruler. For instance, a HeNe laser will generate a dark spot every 633 nm, providing a spectral width <span class="math inline">\(SW = \frac{1}{2\Delta x} = \frac 1 {2 \times 6.33\ 10^{-5}} = 7899\ cm^{-1}\)</span>.</p>
+<p>The measure can be performed from a zero OPD to the maximal one or around this position, symmetrically or not. In this latter case, its precise position is estimated to be where the maximal signal is observed. In both cases, miss adjustment of this zero OPD point will result in phase distortions that must be corrected or compensated by a magnitude computation.</p>
+<p>The main advantage of the approach is the improved accuracy compared to dispersive instruments, provided by a precise sampling of the optical path difference. In emission spectra, the Fellgett’s effect allows working at low light intensity thanks to the gain in sensitivity afforded by FT, for this reason, the method was successfully used in astronomy to measure star or planet atmosphere IR spectra<span class="citation" data-cites="Fellgett Connes_1966"><sup><a href="#ref-Fellgett" role="doc-biblioref">16</a>,<a href="#ref-Connes_1966" role="doc-biblioref">17</a></sup></span>. However, in the case of absorption spectroscopy, where the information is in the missing light, this advantage is lost.</p>
+<p>Several remarkable examples of FTIR applications and, more generally, all FT spectroscopy are crucial to sample analyses across chemical and environmental sciences, encompassing various domains such as atmosphere, water, minerals, and organic materials. FTIR instruments find utility in environmental analyses of the atmosphere deployed in situ on the ground and in outer space. In mineralogy and petrology, it proves invaluable for laboratory-based examinations of diverse samples, including those derived from spatial missions. In astrophysics, research teams engaged in Cosmic Microwave Background (CMB) studies or exploring the interstellar medium, where pronounced signatures are evident in the millimetre and sub-millimetre ranges, often rely on Fourier spectroscopic techniques.</p>
+<!-- PIERRE/ -->
+<!-- Concernant les applications des spectro par TF effectivement il y a pas mal de chose sans être exhaustif:
+- les équipes qui travaillent sur le CMB (fond cosmologique ) ou le le milieu interstellaire qui ont de fortes signature dans le millimétrique et le sub millimétrique utile surtout des technique spectro de Fourier 
+- pour les analyses atmosphériques les FTIR sont utilisé soit en chambre de simulation (une grosse au LISA à Créteil) soit in Situ au sol et dans l’espace.
+- en minéralogie / pétrologie pour les analyses d’échantillons en laboratoire (retour d’échantillons spatiaux par exemple)
+Globalement nos plateformes analytiques INSU en ont toujours pour les analyses de prélèvement dans les sciences de l’environnement (eaux sont ces différentes formes, air, minéraux, matières organiques etc …)
+
+The concept of Stationary-Wave Integrated Fourier Transform Spectrometer (SWIFTS), provides on-chip spectro-detection. The detection is achieved along a standing waves within a single mode waveguide by probing its evanescent field, using nano-detectors. Based on this concept a motionless device is able to probe the spectral information of the incoming signal. Such a concept is convenient for analyses that deal with single mode collection of the light, under diffraction limited condition. -->
+<!-- / PIERRE -->
+</section>
+<section id="fourier-transform-in-imaging" class="level2">
+<h2 class="anchored" data-anchor-id="fourier-transform-in-imaging">Fourier Transform in Imaging</h2>
+<p>FT is heavily used in all forms of analytical methods which rely on any image creation or image analysis: microscopy of any kind (visible, fluorescence, Raman, Electronic, etc.), Magnetic Resonance Imaging (MRI), or even X-ray diffraction.</p>
+<p>All the properties and theorems presented in section <a href="#sec-expe" class="quarto-xref">Section&nbsp;2</a> and <a href="#sec-results" class="quarto-xref">Section&nbsp;3</a> still hold but have to be interpreted with care, as the direct and reciprocal domains are defined differently.</p>
+<p>In direct imaging approaches such as microscopy, FT is not used to produce the result but to apply some operations in the reciprocal domain that would be cumbersome, if not impossible, in the image domain (see <a href="#sec-reciprocal" class="quarto-xref">Section&nbsp;2.1.4</a>). Such operation typically includes blurring or de-blurring, de-noising, de-screening, enhancement, deconvolution, and resampling. However, the results here are estimated on the image itself, so the process implies an inverse FT at the end.</p>
+<p>MRI and X-ray diffraction are similar to spectrometries, as the result is an image (or rather a 3D volume), which requires the FT of the experimental data acquired as a diffraction pattern of the object of interest. Somehow, the X-ray beam diffracting in the crystal, or the magnetic field gradient dispersing the spin resonances, perform an analogue FT of the studied object. Alas, in the case of X-ray, the detector cannot detect the X-ray phase (unless you are using XFELs<span class="citation" data-cites="Georgescu_2020"><sup><a href="#ref-Georgescu_2020" role="doc-biblioref">18</a></sup></span>), and special phasing techniques must be used to recover this lost information.</p>
+</section>
+<section id="multi-dimensional-spectrometry" class="level2">
+<h2 class="anchored" data-anchor-id="multi-dimensional-spectrometry">Multi-Dimensional spectrometry</h2>
+<p>In some experimental approaches, it is possible to correlate one resonance to a second one, either by some transfer mechanism or by some correlation through a common phenomenon. Two classical examples, presented below, are found in NMR and Mass Spectrometry.</p>
+<section id="multi-dimensional-nmr" class="level3">
+<h3 class="anchored" data-anchor-id="multi-dimensional-nmr">Multi-Dimensional NMR</h3>
+<p>In the early days of NMR, perturbing a specific spin in a molecule by irradiating its NMR signal with a radio frequency was a standard procedure to detect interactions between spins. However, this became laborious for large molecular systems with many lines to scan. In 1971, Jean Jeener proposed a new approach<span class="citation" data-cites="Jeener_1971 Jeener_2016"><sup><a href="#ref-Jeener_1971" role="doc-biblioref">19</a>,<a href="#ref-Jeener_2016" role="doc-biblioref">20</a></sup></span> that involves a succession of experiments where the entire spectrum is excited using two successive pulses separated by a variable delay (denoted as <span class="math inline">\(t_1\)</span>). During the first evolution, each signal evolves at its frequency, while interactions could occur and create a final state where each frequency are coded. The second pulse creates a signal in which resonating spins record a track of this interaction, regularly recorded with time (denoted as <span class="math inline">\(t_2\)</span>).</p>
+<p>This approach involves acquiring <span class="math inline">\(n_1\)</span> different experiments, each containing a classical time signal coded on <span class="math inline">\(n_2\)</span> points, resulting in a bi-dimensional signal <span class="math inline">\(s(t_1,t_2)\)</span> coded as a <span class="math inline">\(n_1 \times n_2\)</span> matrix. The interactions are coded as a whole in the dataset. Information is transferred from the first evolution during <span class="math inline">\(t_1\)</span> to the acquisition during <span class="math inline">\(t_2\)</span> as a modulation of the phase or intensity of each signal. Performing an FT with respect to <span class="math inline">\(t_2\)</span> leads to a series of regular spectra, where each signal carries the information of the connected signals, modulated at the frequency of these other signals. A second FT respective to <span class="math inline">\(t_1\)</span> leads to a 2D spectrum, where each peak has two frequency coordinates, <span class="math inline">\(F_1\)</span> and <span class="math inline">\(F_2\)</span>, corresponding to the signal before (<span class="math inline">\(F_1\)</span>) and after (<span class="math inline">\(F_2\)</span>) the transfer that occurred during the experiment. Note that the FT used in multidimensional processing is not strictly equivalent to the FT used in image or diffraction analysis, but uses slightly different mathematics which allow to compute a different phase for each frequency axis.<span class="citation" data-cites="Ernst87 Delsuc_1988"><sup><a href="#ref-Ernst87" role="doc-biblioref">21</a>,<a href="#ref-Delsuc_1988" role="doc-biblioref">22</a></sup></span></p>
+<p>This idea has led to significant developments over the years<span class="citation" data-cites="Aue_1976 ernst1990principles Jeener_2007 Keeler_2010"><sup><a href="#ref-ernst1990principles" role="doc-biblioref">13</a>,<a href="#ref-Aue_1976" role="doc-biblioref">23</a>–<a href="#ref-Keeler_2010" role="doc-biblioref">25</a></sup></span>, and many different experiments have been designed with various types of transfers, such as spin-spin interactions, spatial proximity, and chemical exchange, among others. Homo-nuclear experiments typically involve the same kind of spins (usually <sup>1</sup>H), while hetero-nuclear experiments involve different kinds of spins (such as <sup>13</sup>C and <sup>1</sup>H). Homo-nuclear experiments often exhibit symmetry with respect to the diagonal, reflecting the symmetry of the interaction, while hetero-nuclear experiments do not.</p>
+<p>The procedure has been so efficient that it has been extended to more than two dimensions (3D is common practice in biological NMR, and higher dimensions are not uncommon). It has also be extended to other spectrometries, FT-MS is presented below, but also optical spectroscopies, which are outside the scope of this work<span class="citation" data-cites="Fritzsch_2020"><sup><a href="#ref-Fritzsch_2020" role="doc-biblioref">26</a></sup></span>.</p>
+</section>
+<section id="d-fticr-applications" class="level3">
+<h3 class="anchored" data-anchor-id="d-fticr-applications">2D FTICR applications</h3>
+<p>Two dimensional FTICR mass spectrometry (2D-FTICR-MS) is adapted from the 2D-NMR pulse sequences mentioned above<span class="citation" data-cites="van_Agthoven_2019"><sup><a href="#ref-van_Agthoven_2019" role="doc-biblioref">27</a></sup></span>. There are several different ways to achieve these pulse sequences, but they all work by effectively modulating all ions trapped in the ICR cell (penning trap) radially over a series of experiments, and then fragmenting those same ions using a radially dependent fragmentation method. For example, using a laser based photo-dissociation method (like Infrared Multiphoton Photo-Dissociation, IRMPD or Ultraviolet Photodissociation, UVPD), it is easy to create a fragmentation zone in the middle of the cell and then use the 2DMS pulse sequences to periodically modulate all precursor ions through the centre of the cell. Fragments will be created, or not, with periodicity equal to the modulation frequency of the precursor, which is usually equal to the precursor ions’ cyclotron frequencies. Typically, between 1k and 4k scan lines are acquired making a 2DMS experiment equivalent in time to acquiring that many individual spectra, and the resulting datasets are ‘stacked’ to create a second ‘modulation’ dimension. An additional Fourier transform on the peak intensities in this second dimension readily pulls out the precursor ion’s cyclotron frequency for each and every fragment ion simultaneously.</p>
+<p>The net effect of a 2DMS experiment is to expand out the fragment ions into another, largely orthogonal dimension thus increasing the total peak capacity of the experiment dramatically, effectively multiplying the (already excellent) resolution of the FTICR mass spectrometer with the resolution in the modulation dimension. With 1k–4k scan lines, the modulation dimension usually yields a resolving power of 500–2,000, which is a dramatic increase on the FTICR mass spectrometer’s native resolution. Furthermore, removing the overlap of signals improves the quality and accuracy of centroided peak mass values.</p>
+<p>2DMS follows the same Fellgett signal-to-noise ratio improvements discussed above, however, the additional modulation of the amplitude of the lines halves the full-amplitude of each individual scan line, so 4 scan lines or more are required to make up the SNR of a single 1DMS experiment.</p>
+</section>
+</section>
+</section>
+<section id="reproducibility-and-data-deposition" class="level1">
+<h1>Reproducibility and data deposition</h1>
+<p>Reproducibility has become a critical issue in modern scientific research<span class="citation" data-cites="Baker_2016"><sup><a href="#ref-Baker_2016" role="doc-biblioref">28</a></sup></span>. To address this challenge, measures have been proposed to optimise various key elements of the scientific process, such as adopting open procedures and software and raw data repositories<span class="citation" data-cites="Munaf__2017"><sup><a href="#ref-Munaf__2017" role="doc-biblioref">29</a></sup></span>.</p>
+<p>This issue is particularly relevant in analytical science, where experimental setup and data processing can significantly impact the results. Analysing a measurement involves processing the signal and applying various techniques to obtain the most accurate and least biased possible spectrum. Then, features of interest, such as peak positions and intensities. <!-- ^[and eventually more parameters such as area, shape, or more advanced features.] --> are located and quantified, and the resulting data stored in tabulated files. These tabulated values are the primary material for further analysis, and their availability and long-term preservation are crucial for reproducibility. Today, many databases exist to preserve and distribute such information.</p>
+<p>However, the data processing details can strongly impact the results, so preserving them is essential. Spectra spectra are usually too large to be stored efficiently, and the usage has been to store peak lists resulting from the complete data analysis. Alternatively, storing raw data instead would be a better option. While much larger than peak lists, it is smaller than the processed spectra, better suited to compression, and prone to analysis bias. This choice is becoming a trend in cryo-EM, X-ray crystallography, or NMR techniques. Regarding analytical methods that rely on FT, the problem extends to the software used to process the data and the set of parameters applied. What was performed should clearly be stated, and all the information needed to reproduce the exact same computation should be provided. In this respect, an open-source software that states all operation details, and allows access to the internal algorithms is required. Many such programs are available in X-ray crystallography, NMR, or FTICR<span class="citation" data-cites="CCP4 NMRglue Spike Rusconi_2021"><sup><a href="#ref-CCP4" role="doc-biblioref">30</a>–<a href="#ref-Rusconi_2021" role="doc-biblioref">33</a></sup></span>. However, it becomes challenging if a piece of software in the analysis pipeline is not open-source, such as an accessory sold by the instrument manufacturer as an improvement over competitors.</p>
+<p>In addition to the above measures, open data repositories should be maintained following four key principles: Findability, Accessibility, Interoperability, and Reusability (FAIR)<span class="citation" data-cites="Wilkinson_2016"><sup><a href="#ref-Wilkinson_2016" role="doc-biblioref">34</a></sup></span> proposed to guide the management and sharing of research data. In the context of data repositories, these principles ensure that data is easily discoverable, accessible with clear usage rights, interoperable with other data and tools, and reusable with rich metadata and provenance information. Metadata, an often overlooked critical component of data preservation, should be comprehensive and backed by ontologies (i.e.&nbsp;unambiguously defined vocabularies) originating from the scientific domain.</p>
+<p>The interoperability and reusability of the data stored in the repositories require the data format to be complete, self-consistent and fully described. Several recent examples were proposed in the literature: mzML<span class="citation" data-cites="Deutsch_2008"><sup><a href="#ref-Deutsch_2008" role="doc-biblioref">35</a></sup></span>, Core Scientific Dataset<span class="citation" data-cites="Srivastava_2020"><sup><a href="#ref-Srivastava_2020" role="doc-biblioref">36</a></sup></span>, Massive<span class="citation" data-cites="Choi_2020"><sup><a href="#ref-Choi_2020" role="doc-biblioref">37</a></sup></span>. Many are based on text storage, which is inefficient for the large datasets in FTICR or nD NMR. An alternative is to resort to a specific format, such as HDF5, designed to handle large hierarchical multidimensional datasets along with their metadata efficiently<span class="citation" data-cites="hdffive Wilhelm_2012 Spike"><sup><a href="#ref-Spike" role="doc-biblioref">32</a>,<a href="#ref-hdffive" role="doc-biblioref">38</a>,<a href="#ref-Wilhelm_2012" role="doc-biblioref">39</a></sup></span>.</p>
+</section>
+<section id="limitations-and-optimizations" class="level1">
+<h1>Limitations and optimizations</h1>
+<p>The Fourier transform is not without limitations, and optimising its use is crucial for obtaining high-quality spectra. Here, we will discuss some of the limitations of the FT in spectroscopy and potential optimisations to mitigate them.</p>
+<p>One significant limitation of the FT is the assumption that the signal’s frequency components are constant over time. However, many applications involve non-stationary signals, where the frequency components change over time. This assumption can lead to significant errors in the frequency domain and affect the spectra interpretation.</p>
+<p>Alternative techniques such as wavelet transform, Short-Time Fourier Transform, or Wigner-Ville Distribution are available to overcome this limitation and analyse non-stationary signals<span class="citation" data-cites="Antoine_2001 Sundling_2006 Hoang_2014"><sup><a href="#ref-Antoine_2001" role="doc-biblioref">40</a>–<a href="#ref-Hoang_2014" role="doc-biblioref">42</a></sup></span>.</p>
+<p>Another limitation of FT-based spectroscopy is its sensitivity to phase errors. Phase correction is a critical step in signal processing, especially in the case of absorption spectra, where phase distortion can result in asymmetric line-shape or even negative intensities. One standard method for phase correction is a linearly frequency-dependent correction (first-order correction), which corrects for the phase shift in the signal dependent on frequency. However, a global (zeroth order) correction can still produce errors in phase reference, leading to baseline distortion or artefacts in the spectra. For a more precise correction, in FTICR for instance, higher-order phase correction methods can be used.</p>
+<p>Noise reduction is another optimisation that one can use in FT-based spectroscopy. Noise often corrupts spectral analysis, resulting in poor signal-to-noise ratios (SNRs) and low-quality spectra. Several methods can reduce noise, such as averaging multiple spectra or smoothing. However, these methods may also introduce unwanted distortions or modify the peak shapes or intensities. Algorithmic noise reduction is a standard procedure and can be performed either on the spectrum after FT or before. For instance, we have seen that apodisation can reduce noise in a manner related to the so-called “Optimal Wiener filtering”<span class="citation" data-cites="Wiener49"><sup><a href="#ref-Wiener49" role="doc-biblioref">43</a></sup></span>. More advanced processing can improve the final signal-to-noise ratio even further, usually at the price of more hypotheses on the nature of the signal. Finally, Linear Algebra approaches allow substantial noise reduction for a spectrum composed of sharp Lorentzian lines<span class="citation" data-cites="Cadzow_1988 Chiron_2014"><sup><a href="#ref-Cadzow_1988" role="doc-biblioref">44</a>,<a href="#ref-Chiron_2014" role="doc-biblioref">45</a></sup></span>.</p>
+<p>Advanced processing based on regularisation methods allows to handle datasets with missing or corrupted data points, artefacts that can strongly disrupt the FT spectrum if not corrected. These approaches have recently improved to the point that under-sampled datasets can be efficiently processed<span class="citation" data-cites="Stern_2015 Gamez_2016 Xie_2022"><sup><a href="#ref-Stern_2015" role="doc-biblioref">46</a>–<a href="#ref-Xie_2022" role="doc-biblioref">48</a></sup></span>. under-sampling is particularly interesting in gaining experimental time in the lengthy multi-dimensional spectrometries<span class="citation" data-cites="Kazimierczuk_2015 Bray_2017"><sup><a href="#ref-Kazimierczuk_2015" role="doc-biblioref">49</a>,<a href="#ref-Bray_2017" role="doc-biblioref">50</a></sup></span>.</p>
+<p>Finally, low-frequency signals can pose a challenge in spectroscopy, particularly in Nuclear Magnetic Resonance (NMR) applications, where the solvent signal can mask the low-frequency region of interest. Various solvent suppression techniques performed during acquisition, such as presaturation or Watergate pulse sequences, have been developed to mitigate this issue.</p>
+</section>
+<section id="outlook" class="level1">
+<h1>Outlook</h1>
+<p>Fourier transform has been a tool in domains as diverse as astrophysics, geology, analytical chemistry, and biology since the early XIX<sup>e</sup> century.</p>
+<p>However, because of the avalanche of data, the availability of large data repositories, and the increased power of computers, new challenges appear in data handling, and new questions can be addressed.</p>
+<section id="challenges-for-the-next-decade" class="level2">
+<h2 class="anchored" data-anchor-id="challenges-for-the-next-decade">Challenges for the next decade</h2>
+<section id="handling-huge-datasets" class="level3">
+<h3 class="anchored" data-anchor-id="handling-huge-datasets">Handling Huge Datasets</h3>
+<p>Experimental data can be voluminous, consuming substantial storage space. The sheer volume of raw data generated is often overwhelming in fields like imaging, proteomics or structural biology. Datasets from clinical studies or expensive samples require long-term preservation, necessitating reliable and efficient storage solutions. Ensuring accessibility and data integrity over time is crucial, and reasonable retrieval times must be warranted.</p>
+<p>Addressing the challenges of handling and processing large datasets requires a combination of data access and management optimisation, accelerated algorithms and hardware, and distributed processing. Additionally, developing alternative methods should allow researchers and practitioners to obtain valuable insights from massive datasets without prohibitive computational costs.</p>
+<p>When dealing with datasets that exceed available memory, out-of-core processing becomes crucial. Efficient data access and management are essential to minimise the overhead of reading data from disk. Furthermore, it is critical to consider whether the time spent accessing data from storage is comparable to or outweighs the time required for processing.</p>
+<p>Distributed processing is problematic in classical FT because the entire dataset must be handled simultaneously. However, specialised algorithms that can partially distribute the workload across multiple nodes do exist. Multidimensional FT presents an advantage in distributed processing scenarios. Each dimension can be treated as independent operations, allowing for efficient parallelisation and distributed computing.</p>
+<p>Graphics Processing Units (GPUs) have emerged as a potential solution to accelerate FT processing. However, significant challenges lie in developing efficient algorithms that fully harness the computational power of GPUs.</p>
+<p>Obtaining a fully accurate FT spectrum can be overwhelming for large datasets. One interesting solution is in the development of fast, approximate estimation techniques. These techniques aim to accurately represent the Fourier spectrum while significantly reducing the computational burden.</p>
+</section>
+<section id="long-term-storage-challenges" class="level3">
+<h3 class="anchored" data-anchor-id="long-term-storage-challenges">Long term Storage Challenges</h3>
+<p>Storage of extensive experimental data poses significant challenges in various domains, and Fourier approaches can provide valuable solutions to address these issues.</p>
+<p>Combined with the approaches presented above and using information from the frequency domain, redundant or irrelevant information can be reduced, resulting in a more compact representation.</p>
+<p>If some loss of information is acceptable, spectral-based lossy compression schemes can be implemented and bring substantial gains. These schemes exploit the frequency domain properties revealed by FT to discard less essential data components, such as empty regions or noise, similar to JPEG for images and MP3 for audio, examples of lossy compression methods that leverage spectral information. Lossless compression techniques based on FT can be employed for situations where data fidelity is critical. These methods, which rely on specific properties of the data (limited range, integer representation) and data regularities, may reduce storage requirements without sacrificing data integrity.</p>
+<p>Note that when utilizing FT-based compression, storing metadata describing the transformation process is essential. It ensures that the data can be properly reconstructed when needed for analysis or interpretation.</p>
+</section>
+</section>
+<section id="novel-and-alternative-approaches" class="level2">
+<h2 class="anchored" data-anchor-id="novel-and-alternative-approaches">Novel and alternative approaches</h2>
+<p>Novel approaches in spectral analysis are continually emerging, addressing various questions and challenges. How can we improve the accuracy and precision of Fourier analysis in real-world scenarios for imperfect datasets? How can we ensure the detection of faint signals in the presence of large, unwanted sources? Is it possible to track the subtle frequency variations of an unstable source - such as the ion packet orbiting in the FTICR or Orbitrap instruments? How can we separate frequencies closer to each other than the minimum separation defined by the Nyquist theorem?</p>
+<section id="non-standard-sampling" class="level3">
+<h3 class="anchored" data-anchor-id="non-standard-sampling">Non-standard Sampling</h3>
+<p>Traditional FT assumes uniform sampling, but non-uniform sampling (NUS) techniques are gaining traction. These approaches involve irregularly spaced data points and are particularly useful in scenarios where data collection is constrained (MRI, for instance). Adapting the sampling to the data itself (fewer points where there is less signal) or dropping points to speed up acquisition may benefit the overall quality of the experiment.</p>
+</section>
+<section id="multi-scale-analysis-and-compressed-sensing" class="level3">
+<h3 class="anchored" data-anchor-id="multi-scale-analysis-and-compressed-sensing">Multi-scale Analysis and Compressed sensing</h3>
+<p>Non-FT methods like wavelet transform, filter diagonalisation, or Chirp z-transform provide multi-scale analysis capabilities, allowing a detailed analysis both in frequency and in time. These approaches will have to be improved to allow the analysis of rapidly varying signals and to precisely follow the frequencies of unstable sources.</p>
+<p>Compressed sensing is a revolutionary approach that enables the reconstruction of signals from significantly fewer samples than traditionally required and has been successfully applied to NUS data and corrupted ones. It leverages the sparsity of signals in the Fourier spectrum to recover accurate information. Based on assumptions different from the central assumptions of the classical Fourier theory, it even allows, in certain conditions, to overcome the Nyquist theorem in the time domain (sub-Nyquist sampling) and the frequency domain (super-resolution) in a manner not unrelated to the optical super-resolution approaches which overcome the diffraction limits in microscopy.</p>
+</section>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion…</h2>
+<p>The Fourier Transform stands out as a pivotal tool in various analytical sciences, proving its indispensability in signal processing. While the seemingly straightforward task of decomposing a signal into its constituent frequencies is deceptively simple, it offers profound insights into the intricate properties of the signal.</p>
+<p>The versatility of FT opens up a large number of possibilities, ranging from noise filtering to resolution enhancement. This transformative capability, coupled with the computational power of modern computers and sophisticated algorithms, facilitates the analysis of large and intricate datasets. It allows researchers to delve into complex data, unraveling patterns and structures challenging to discern.</p>
+<p>In the contemporary landscape, the fusion of Machine Learning (ML) and Artificial Intelligence (AI) techniques with Fourier Transform has become a frontier in analytical science. Deep learning and neural networks, integral components of ML and AI, are now being deployed to automatically and unbiasedly analyze spectra and images. These innovative approaches extend beyond mere analysis, encompassing deconvolution strategies and denoising methods.</p>
+<p>Despite the significant strides made in integrating ML and FT techniques, the optimal ways to combine them for signal processing and feature extraction remain open questions. Exploring how these approaches can adapt to evolving data characteristics is a fascinating avenue for future research. The dynamic interplay between machine learning algorithms and Fourier Transform techniques holds the promise of unlocking new dimensions in analytical science, paving the way for more efficient and adaptive signal processing methodologies.</p>
+<!-- We have seen that Fourier Transform is a central tool for several analytical science.
+
+The simple task of decomposing a signal into its constituent frequencies, as simple as it seems, allows an in-depth understanding of the signal properties.
+
+The Fourier Transform versatibility opens possibilities such as noise filtering, resolution enhancement, and ...
+
+With the help of modern computers and clever algorithm, Fourier Transform can be now used to analyse large and complex data-sets.
+
+Finally, Machine Learning (ML) and Artificial intelligence (AI) techniques, such as deep learning or neural networks, are being applied to analyse spectra and images in an automatic and unbiaised manner.
+These techniques have also been proposed for deconvolution approaches and denoising.
+
+What the most effective ways to combine ML and FT techniques for optimised signal processing and feature extraction are and how these approaches can adapt to changing data characteristics are still open questions.
+
+### AI Integration
+Finally, Machine Learning (ML) and Artificial intelligence (AI) techniques, such as deep learning or neural networks, are being applied to analyse spectra and images in an automatic and unbiaised manner.
+These techniques have also been proposed for deconvolution approaches and denoising.
+
+What the most effective ways to combine ML and FT techniques for optimised signal processing and feature extraction are and how these approaches can adapt to changing data characteristics are still open questions.
+ -->
+<!-- ## Priorities for the Next 5-10 Years:
+
+*MAD: I have been out of inspiration for this part, just jotted a few ideas...*
+
+Over the next 5-10 years, priorities in Fourier transform processing may include:
+
+Efficiency and Scalability: Developing more efficient algorithms and scalable solutions for processing increasingly large datasets in real-time or near-real-time applications.
+
+Interdisciplinary Collaboration: Encouraging collaboration between researchers in mathematics, signal processing, computer science, and domain-specific fields to advance Fourier transform techniques tailored to specific applications.
+
+Standardization: Establishing standards for data representation, metadata, and storage formats to facilitate data interoperability and sharing across domains.
+
+Hybrid Approaches: Investigating hybrid methods that combine traditional Fourier analysis with non-standard approaches and AI to leverage the strengths of each for improved results. -->
+</section>
+</section>
+<section id="acknowledgments" class="level1 unnumbered unlisted">
+<h1 class="unnumbered unlisted">Acknowledgments</h1>
+<p>The authors thank P.Kern for correcting the text and helpfull advises on its content.</p>
+</section>
+<section id="competing-interests" class="level1 unnumbered unlisted">
+<h1 class="unnumbered unlisted">Competing interests</h1>
+<p>All authors, please declare any competing interests for all authors. Our competing interest policy can be found here: http://www.nature.com/authors/policies/competing.html . For the purposes of this policy, competing interests are defined as financial and non-financial interests that could directly, or be perceived to, undermine the objectivity, integrity and value of a publication, through a potential influence on the judgments and actions of authors with regard to objective data presentation, analysis and interpretation. Non-financial competing interests can include, for example, membership in an advocacy or lobbying organization, or consulting for an educational company.</p>
+</section>
+<section id="glossary" class="level1 unnumbered">
+<h1 class="unnumbered">Glossary</h1>
+<dl>
+<dt><strong>Fourier series</strong></dt>
+<dd>
+a series of sinusoidal functions that can a approximate any periodic function.
+</dd>
+<dt><strong>Nyquist criterion</strong></dt>
+<dd>
+determines the highest frequency faithfully sampled by a given periodic sampling.
+</dd>
+<dt><strong>Discrete Fourier Transform</strong></dt>
+<dd>
+(or DFT) is a linear algebra transformation, which can be represented by a square matrix; it shares many properties with the analytical Fourier Transform operation applied to continuous functions.
+</dd>
+<dt><strong>Fast Discrete Fourier Transform</strong></dt>
+<dd>
+(or FFT) an algorithm that performs the DFT computation more rapidely than the naive matrix approach, and allows the processing of large vectors provided their size is decomposable into small prime numbers.
+</dd>
+<dt><strong>Fellgett effect:</strong></dt>
+<dd>
+(or multiplex advantage) improvement of the signal-to-noise ratio observed for stationary signals
+</dd>
+<dt><strong>Convolution</strong></dt>
+<dd>
+an integral transformation that combines two independent functions into a resulting function, and appears in many aspects of spectral analysis.
+</dd>
+<dt><strong>Gaussian decay</strong></dt>
+<dd>
+a signal decaying with an gaussian dependency to a characteristic time <span class="math inline">\(\tau\)</span> : <span class="math inline">\(s(t) \propto exp(-t^2/\tau^2)\)</span>
+</dd>
+<dt><strong>Exponential decay</strong></dt>
+<dd>
+a signal decaying with an exponential dependency to a characteristic time <span class="math inline">\(\tau\)</span> : <span class="math inline">\(s(t) \propto exp(-t/\tau)\)</span>
+</dd>
+<dt><strong>Gate function</strong></dt>
+<dd>
+(or <em>box-car</em> function) a function null everywhere except in a continuous interval <span class="math inline">\([a \cdots b]\)</span> where it is equal to 1, used to express the measurement process of a signal during this interval; its Fourier transform is the <em>sinc</em> function.
+</dd>
+<dt><strong>Sinc function</strong></dt>
+<dd>
+(or <em>sine cardinal</em> function) a function defined as <span class="math inline">\(\textrm{sinc}\, x = \frac{\sin x}{x}\)</span> with a characteristic bell shape around zero and oscillating tails decaying away from the center; its Fourier transform is the <em>Gate</em> function.
+</dd>
+<dt><strong>Apodisation</strong></dt>
+<dd>
+(or windowing) consists in multiplying the signal prior to FT by a (usually decaying) adequate function; this allows to improve the signal-to-noise ratio, to correct for truncature artefacts, and to improve peak lineshape (see <a href="#fig-apod" class="quarto-xref">Figure&nbsp;6</a>).
+</dd>
+<dt><strong>Full Width at Half Maximum</strong></dt>
+<dd>
+(or FWHM) a standardized measure of the width of a spectral peak obtained by computing its width at 50% of the maximum point of the peak.
+</dd>
+<dt><strong>White noise</strong></dt>
+<dd>
+a random signal, with no characteristic frequency and a flat frequency spectrum.
+</dd>
+<dt><strong>Colored noise</strong></dt>
+<dd>
+a random signal, with no characteristic frequency but with a frequency spectrum presenting some global features - for instance decaying for high frequencies (pink noise).
+</dd>
+<dt><strong>Centered white Gaussian noise</strong></dt>
+<dd>
+a random signal, with no characteristic frequency, a flat frequency spectrum, and signal intensities with a Gaussian probability and zero mean.
+</dd>
+<dt><strong>Signal-to-Noise ratio</strong></dt>
+<dd>
+(or SNR) ratio of the intensity of a frequency signal in the spectrum to the background noise observed in the same spectrum, measured either from its standard deviation or by peak-to-peak extension.
+</dd>
+</dl>
+<div style="page-break-after: always;"></div>
+</section>
+<section id="box-1" class="level1 unnumbered">
+<h1 class="unnumbered">Box 1</h1>
+<div class="callout callout-style-default callout-tip no-icon callout-titled" title="Basic FT properties">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Basic FT properties
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Linearity:</strong> the FT of the sum of two signals equals the sum of their respective FTs. This property follows directly from the definition in <a href="#eq-ftdef" class="quarto-xref">Equation&nbsp;12</a>. It is fundamental that two signals superimposed in the time domain with different frequencies, do not interfere in the spectrum. It can clearly be seen in <a href="#fig-ft1" class="quarto-xref">Figure&nbsp;3</a> where the signals superposed in the time domain are fully separated in the spectrum. The linearity also means that the FT can be used naturally in quantitative analyses, as long as the detector is linear: no interferences - no cross-talks.</p>
+<p><strong>Fellgett effect:</strong> (also multiplex advantage). In 1951, Fellgett noticed an interesting effect on peak intensities in FT-IR spectroscopies in that the signal/noise ratio of all peaks in his spectrum increased by the square root of the number of data points.<span class="citation" data-cites="Fellgett"><sup><a href="#ref-Fellgett" role="doc-biblioref">16</a></sup></span> In effect, due to the summing integral, the Fourier transform constantly sums all signals over all the detected data points, so provided the signal is stable and the baseline noise in the detector is random, then the signal will grow linearly with the number of measurements and the noise will grow as the square root of the number of measurements, so that increasing the detection time is exactly equivalent to signal averaging, while also simultaneously increasing resolution, as discussed above.</p>
+<p><strong>Invertibility:</strong> the inverse of the FT can be computed, and one can go back and forth between the two reciprocal domains. This means that the FT does not lose nor add any information but instead changes the point of view. The inverse FT is the same operation with a sign inversion of the axis (see <a href="#eq-ftdef" class="quarto-xref">Equation&nbsp;12</a> and <a href="#eq-ftm1def" class="quarto-xref">Equation&nbsp;13</a>). For this reason, applying the FT twice inverts the data, and applying it four times has no effect (very much like a 90° rotation would do on the 2D plane).</p>
+<p><strong>Compaction-dilation:</strong> a compact signal in one domain is wide in the reciprocal domain. This again is seen in <a href="#fig-ft1" class="quarto-xref">Figure&nbsp;3</a> where the slowly decaying time component (in red) corresponds to the sharpest peak; while the faster decaying component (in green) (so more compact in the time domain) presents a broad line (less compact in the frequency domain). This is related to the uncertainty principle which states that it is impossible to precisely define the frequency of a short-lived signal.</p>
+<p><strong>Special values:</strong> the points located at <span class="math inline">\(t=0\)</span> and <span class="math inline">\(f=0\)</span> have special properties. Since <span class="math inline">\(e^{i0} = \exp(0) = 1\)</span>, it follows naturally from the definitions that the value <span class="math inline">\(S(0)\)</span> (the null frequency) is equal to the sum of the points in the time domain, and the first point <span class="math inline">\(s(0)\)</span> is echoed as a constant intensity offset in the whole spectrum <span class="math inline">\(S(f)\)</span>. This can be seen as the extreme case of the compaction-dilation property above.</p>
+</div>
+</div>
+<div style="page-break-after: always;"></div>
+</section>
+<section id="references" class="level1 unnumbered">
+
+
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body" data-entry-spacing="0" data-line-spacing="2" role="list">
+<div id="ref-BracewellFT" class="csl-entry" role="listitem">
+<div class="csl-left-margin">1. </div><div class="csl-right-inline">Bracewell, R. N. <em><span class="nocase">The Fourier Transform and Its Applications</span></em>. (McGraw Hill, 2000).</div>
+</div>
+<div id="ref-FTFourier" class="csl-entry" role="listitem">
+<div class="csl-left-margin">2. </div><div class="csl-right-inline">Fourier, J. B. J. <em><a href="https://www.gabay-editeur.com/FOURIER-Theorie-analytique-de-la-chaleur-1822">Th<span>é</span>orie analytique de la chaleur</a></em>. (Firmin Didot Père et Fils, 1822).</div>
+</div>
+<div id="ref-FTFreeman" class="csl-entry" role="listitem">
+<div class="csl-left-margin">3. </div><div class="csl-right-inline">Freeman, A. <em><span class="nocase">The Analytical Theory of Heat</span></em>. (Cambridge University Press, Cambridge UK., 1878).</div>
+</div>
+<div id="ref-Cooley_1965" class="csl-entry" role="listitem">
+<div class="csl-left-margin">4. </div><div class="csl-right-inline">Cooley, J. W. &amp; Tukey, J. W. <a href="https://doi.org/10.1090/s0025-5718-1965-0178586-1"><span class="nocase">An algorithm for the machine calculation of complex Fourier series</span></a>. <em>Mathematics of Computation</em> <strong>19</strong>, 297–301 (1965).</div>
+</div>
+<div id="ref-Qi_2014" class="csl-entry" role="listitem">
+<div class="csl-left-margin">5. </div><div class="csl-right-inline">Qi, Y. &amp; O’Connor, P. B. <a href="https://doi.org/10.1002/mas.21414"><span class="nocase">Data processing in Fourier transform ion cyclotron resonance mass spectrometry</span></a>. <em>Mass Spectrometry Reviews</em> <strong>33</strong>, 333–352 (2014).</div>
+</div>
+<div id="ref-Mallat" class="csl-entry" role="listitem">
+<div class="csl-left-margin">6. </div><div class="csl-right-inline">Mallat, S. <em><span class="nocase">A Wavelet Tour of Signal Processing, The Sparse Way</span></em>. (Cambridge University Press, Cambridge UK., 2008). doi:<a href="https://doi.org/10.1016/B978-0-12-374370-1.X0001-8">10.1016/B978-0-12-374370-1.X0001-8</a>.</div>
+</div>
+<div id="ref-Marshall_1998" class="csl-entry" role="listitem">
+<div class="csl-left-margin">7. </div><div class="csl-right-inline">Marshall, A. G., Hendrickson, C. L. &amp; Jackson, G. S. <a href="https://doi.org/10.1002/(sici)1098-2787(1998)17:1<1::aid-mas1>3.0.co;2-k">Fourier transform ion cyclotron resonance mass spectrometry: A primer</a>. <em>Mass Spectrometry Reviews</em> <strong>17</strong>, 1–35 (1998).</div>
+</div>
+<div id="ref-Marshall_2015" class="csl-entry" role="listitem">
+<div class="csl-left-margin">8. </div><div class="csl-right-inline">Marshall, A. G. &amp; Chen, T. <a href="https://doi.org/10.1016/j.ijms.2014.06.034">40 years of fourier transform ion cyclotron resonance mass spectrometry</a>. <em>International Journal of Mass Spectrometry</em> <strong>377</strong>, 410–420 (2015).</div>
+</div>
+<div id="ref-Makarov_2000" class="csl-entry" role="listitem">
+<div class="csl-left-margin">9. </div><div class="csl-right-inline">Makarov, A. <a href="https://doi.org/10.1021/ac991131p">Electrostatic axially harmonic orbital trapping: A high-performance technique of mass analysis</a>. <em>Analytical Chemistry</em> <strong>72</strong>, 1156–1162 (2000).</div>
+</div>
+<div id="ref-Hardman_2003" class="csl-entry" role="listitem">
+<div class="csl-left-margin">10. </div><div class="csl-right-inline">Hardman, M. &amp; Makarov, A. A. <a href="https://doi.org/10.1021/ac0258047">Interfacing the orbitrap mass analyzer to an electrospray ion source</a>. <em>Analytical Chemistry</em> <strong>75</strong>, 1699–1705 (2003).</div>
+</div>
+<div id="ref-Scigelova_2006" class="csl-entry" role="listitem">
+<div class="csl-left-margin">11. </div><div class="csl-right-inline">Scigelova, M. &amp; Makarov, A. <a href="https://doi.org/10.1002/pmic.200600528">Orbitrap mass analyzer – overview and applications in proteomics</a>. <em>PROTEOMICS</em> <strong>6</strong>, 16–21 (2006).</div>
+</div>
+<div id="ref-Ernst_1992" class="csl-entry" role="listitem">
+<div class="csl-left-margin">12. </div><div class="csl-right-inline">Ernst, R. R. <a href="https://doi.org/10.1002/anie.199208053">Nuclear magnetic resonance fourier transform spectroscopy (nobel lecture)</a>. <em>Angewandte Chemie International Edition in English</em> <strong>31</strong>, 805–823 (1992).</div>
+</div>
+<div id="ref-ernst1990principles" class="csl-entry" role="listitem">
+<div class="csl-left-margin">13. </div><div class="csl-right-inline">Ernst, R. R., Bodenhausen, G. &amp; Wokaun, A. <em><a href="https://books.google.fr/books?id=4bohtceju9kC">Principles of nuclear magnetic resonance in one and two dimensions</a></em>. (Clarendon Press, 1990).</div>
+</div>
+<div id="ref-W_thrich_2003" class="csl-entry" role="listitem">
+<div class="csl-left-margin">14. </div><div class="csl-right-inline">Wüthrich, K. <a href="https://doi.org/10.1002/anie.200300595">NMR studies of structure and function of biological macromolecules (nobel lecture)</a>. <em>Angewandte Chemie International Edition</em> <strong>42</strong>, 3340–3363 (2003).</div>
+</div>
+<div id="ref-Berthomieu_2009" class="csl-entry" role="listitem">
+<div class="csl-left-margin">15. </div><div class="csl-right-inline">Berthomieu, C. &amp; Hienerwadel, R. <a href="https://doi.org/10.1007/s11120-009-9439-x">Fourier transform infrared (FTIR) spectroscopy</a>. <em>Photosynthesis Research</em> <strong>101</strong>, 157–170 (2009).</div>
+</div>
+<div id="ref-Fellgett" class="csl-entry" role="listitem">
+<div class="csl-left-margin">16. </div><div class="csl-right-inline">Fellgett, P. <span class="nocase">Theory of Infra-Red Sensitivites and Its Application to Investigations of Stellar Radiation in the near Infra-Red</span>. (University of Cambridge, 1951).</div>
+</div>
+<div id="ref-Connes_1966" class="csl-entry" role="listitem">
+<div class="csl-left-margin">17. </div><div class="csl-right-inline">Connes, J. &amp; Connes, P. <a href="https://doi.org/10.1364/josa.56.000896"><span class="nocase">Near-Infrared Planetary Spectra by Fourier Spectroscopy I Instruments and Results</span></a>. <em>Journal of the Optical Society of America</em> <strong>56</strong>, 896 (1966).</div>
+</div>
+<div id="ref-Georgescu_2020" class="csl-entry" role="listitem">
+<div class="csl-left-margin">18. </div><div class="csl-right-inline">Georgescu, I. <a href="https://doi.org/10.1038/s42254-020-0204-6">The first decade of <span>XFELs</span></a>. <em>Nature Reviews Physics</em> <strong>2</strong>, 345–345 (2020).</div>
+</div>
+<div id="ref-Jeener_1971" class="csl-entry" role="listitem">
+<div class="csl-left-margin">19. </div><div class="csl-right-inline">Jeener, J. The unpublished <span>Basko Polje</span> (1971) lecture notes about two-dimensional <span>NMR</span> spectroscopy. in (Editions de la Physique, 1994).</div>
+</div>
+<div id="ref-Jeener_2016" class="csl-entry" role="listitem">
+<div class="csl-left-margin">20. </div><div class="csl-right-inline">Jeener, J. &amp; Alewaeters, G. <a href="https://doi.org/10.1016/j.pnmrs.2016.03.002"><span class="nocase">"Pulse pair technique in high resolution <span>NMR</span>" a reprint of the historical 1971 lecture notes on two-dimensional spectroscopy</span></a>. <em>Progress in Nuclear Magnetic Resonance Spectroscopy</em> <strong>94-95</strong>, 75–80 (2016).</div>
+</div>
+<div id="ref-Ernst87" class="csl-entry" role="listitem">
+<div class="csl-left-margin">21. </div><div class="csl-right-inline">Ernst, R. R., Bodenhausen, G. &amp; Wokaun, A. <em><span class="nocase">Principles of Nuclear Magnetic Resonance in One and Two Dimensions</span></em>. (Oxford University Press, 1987).</div>
+</div>
+<div id="ref-Delsuc_1988" class="csl-entry" role="listitem">
+<div class="csl-left-margin">22. </div><div class="csl-right-inline">Delsuc, M. A. <a href="https://doi.org/10.1016/0022-2364(88)90036-4">Spectral representation of 2D <span>NMR</span> spectra by hypercomplex numbers</a>. <em>Journal of Magnetic Resonance (1969)</em> <strong>77</strong>, 119–124 (1988).</div>
+</div>
+<div id="ref-Aue_1976" class="csl-entry" role="listitem">
+<div class="csl-left-margin">23. </div><div class="csl-right-inline">Aue, W. P., Bartholdi, E. &amp; Ernst, R. R. <a href="https://doi.org/10.1063/1.432450"><span class="nocase">Two-dimensional spectroscopy. Application to nuclear magnetic resonance</span></a>. <em>The Journal of Chemical Physics</em> <strong>64</strong>, 2229–2246 (1976).</div>
+</div>
+<div id="ref-Jeener_2007" class="csl-entry" role="listitem">
+<div class="csl-left-margin">24. </div><div class="csl-right-inline">Jeener, J. <span class="nocase">Jeener, Jean: Reminiscences about the Early Days of 2D NMR</span>. (2007) doi:<a href="https://doi.org/10.1002/9780470034590.emrhp0087">10.1002/9780470034590.emrhp0087</a>.</div>
+</div>
+<div id="ref-Keeler_2010" class="csl-entry" role="listitem">
+<div class="csl-left-margin">25. </div><div class="csl-right-inline">Keeler, J. <em><span class="nocase">Understanding NMR Spectroscopy (2nd ed.)</span></em>. (Wiley, 2010).</div>
+</div>
+<div id="ref-Fritzsch_2020" class="csl-entry" role="listitem">
+<div class="csl-left-margin">26. </div><div class="csl-right-inline">Fritzsch, R. <em>et al.</em> <a href="https://doi.org/10.1039/c9an02035g">Two-dimensional infrared spectroscopy: An emerging analytical tool?</a> <em>The Analyst</em> <strong>145</strong>, 2014–2024 (2020).</div>
+</div>
+<div id="ref-van_Agthoven_2019" class="csl-entry" role="listitem">
+<div class="csl-left-margin">27. </div><div class="csl-right-inline">Agthoven, M. A. van, Lam, Y. P. Y., O’Connor, P. B., Rolando, C. &amp; Delsuc, M.-A. <a href="https://doi.org/10.1007/s00249-019-01348-5">Two-dimensional mass spectrometry: New perspectives for tandem mass spectrometry</a>. <em>European Biophysics Journal</em> <strong>48</strong>, 213–229 (2019).</div>
+</div>
+<div id="ref-Baker_2016" class="csl-entry" role="listitem">
+<div class="csl-left-margin">28. </div><div class="csl-right-inline">Baker, M. <a href="https://doi.org/10.1038/533452a">1,500 scientists lift the lid on reproducibility</a>. <em>Nature</em> <strong>533</strong>, 452–454 (2016).</div>
+</div>
+<div id="ref-Munaf__2017" class="csl-entry" role="listitem">
+<div class="csl-left-margin">29. </div><div class="csl-right-inline">Munafò, M. R. <em>et al.</em> <a href="https://doi.org/10.1038/s41562-016-0021">A manifesto for reproducible science</a>. <em>Nature Human Behaviour</em> <strong>1</strong>, (2017).</div>
+</div>
+<div id="ref-CCP4" class="csl-entry" role="listitem">
+<div class="csl-left-margin">30. </div><div class="csl-right-inline">Winn, M. D. <em>et al.</em> <a href="https://doi.org/10.1107/s0907444910045749">Overview of the <em>CCP</em>4 suite and current developments</a>. <em>Acta Crystallographica Section D Biological Crystallography</em> <strong>67</strong>, 235–242 (2011).</div>
+</div>
+<div id="ref-NMRglue" class="csl-entry" role="listitem">
+<div class="csl-left-margin">31. </div><div class="csl-right-inline">Helmus, J. J. &amp; Jaroniec, C. P. <a href="https://doi.org/10.1007/s10858-013-9718-x"><span class="nocase">Nmrglue: an open source Python package for the analysis of multidimensional NMR data</span></a>. <em>Journal of Biomolecular <span>NMR</span></em> <strong>55</strong>, 355–367 (2013).</div>
+</div>
+<div id="ref-Spike" class="csl-entry" role="listitem">
+<div class="csl-left-margin">32. </div><div class="csl-right-inline">Chiron, L., Coutouly, M.-A., Starck, J.-P., Rolando, C. &amp; Delsuc, M.-A. <span class="nocase">SPIKE a Processing Software dedicated to Fourier Spectroscopies</span>. (2016) doi:<a href="https://doi.org/10.48550/ARXIV.1608.06777">10.48550/ARXIV.1608.06777</a>.</div>
+</div>
+<div id="ref-Rusconi_2021" class="csl-entry" role="listitem">
+<div class="csl-left-margin">33. </div><div class="csl-right-inline">Rusconi, F. <a href="https://doi.org/10.2174/1389203722666210118160946"><span class="nocase">Free Open Source Software for Protein and Peptide Mass Spectrometry-based Science</span></a>. <em>Current Protein and Peptide Science</em> <strong>22</strong>, 134–147 (2021).</div>
+</div>
+<div id="ref-Wilkinson_2016" class="csl-entry" role="listitem">
+<div class="csl-left-margin">34. </div><div class="csl-right-inline">Wilkinson, M. D. <em>et al.</em> <a href="https://doi.org/10.1038/sdata.2016.18">The <span>FAIR Guiding Principles</span> for scientific data management and stewardship</a>. <em>Scientific Data</em> <strong>3</strong>, (2016).</div>
+</div>
+<div id="ref-Deutsch_2008" class="csl-entry" role="listitem">
+<div class="csl-left-margin">35. </div><div class="csl-right-inline">Deutsch, E. <a href="https://doi.org/10.1002/pmic.200890049"><span class="nocase">mzML</span>: A single, unifying data format for mass spectrometer output</a>. <em><span>PROTEOMICS</span></em> <strong>8</strong>, 2776–2777 (2008).</div>
+</div>
+<div id="ref-Srivastava_2020" class="csl-entry" role="listitem">
+<div class="csl-left-margin">36. </div><div class="csl-right-inline">Srivastava, D. J., Vosegaard, T., Massiot, D. &amp; Grandinetti, P. J. <a href="https://doi.org/10.1371/journal.pone.0225953"><span class="nocase">Core Scientific Dataset Model: A lightweight and portable model and file format for multi-dimensional scientific data</span></a>. <em><span>PLOS</span> <span>ONE</span></em> <strong>15</strong>, e0225953 (2020).</div>
+</div>
+<div id="ref-Choi_2020" class="csl-entry" role="listitem">
+<div class="csl-left-margin">37. </div><div class="csl-right-inline">Choi, M. <em>et al.</em> <a href="https://doi.org/10.1038/s41592-020-0955-0"><span>MassIVE</span>.quant: A community resource of quantitative mass spectrometry-based proteomics datasets</a>. <em>Nature Methods</em> <strong>17</strong>, 981–984 (2020).</div>
+</div>
+<div id="ref-hdffive" class="csl-entry" role="listitem">
+<div class="csl-left-margin">38. </div><div class="csl-right-inline">The HDF Group. <a href="http://www.hdfgroup.org/HDF5"><span class="nocase">Hierarchical data format version 5</span></a>. (2000-2010).</div>
+</div>
+<div id="ref-Wilhelm_2012" class="csl-entry" role="listitem">
+<div class="csl-left-margin">39. </div><div class="csl-right-inline">Wilhelm, M., Kirchner, M., Steen, J. A. J. &amp; Steen, H. <a href="https://doi.org/10.1074/mcp.o111.011379"><span class="nocase">mz5: Space- and Time-efficient Storage of Mass Spectrometry Data Sets</span></a>. <em>Molecular &amp; Cellular Proteomics</em> <strong>11</strong>, O111.011379 (2012).</div>
+</div>
+<div id="ref-Antoine_2001" class="csl-entry" role="listitem">
+<div class="csl-left-margin">40. </div><div class="csl-right-inline">Antoine, J.-P., Chauvin, C. &amp; Coron, A. <a href="https://doi.org/10.1002/nbm.699">Wavelets and related time-frequency techniques in magnetic resonance spectroscopy</a>. <em><span>NMR</span> in Biomedicine</em> <strong>14</strong>, 265–270 (2001).</div>
+</div>
+<div id="ref-Sundling_2006" class="csl-entry" role="listitem">
+<div class="csl-left-margin">41. </div><div class="csl-right-inline">Sundling, M., Sukumar, N., Zhang, H., Embrechts, M. J. &amp; Breneman, C. M. <span class="nocase">Wavelets in Chemistry and Cheminformatics</span>. 295–329 (2006) doi:<a href="https://doi.org/10.1002/0471780367.ch5">10.1002/0471780367.ch5</a>.</div>
+</div>
+<div id="ref-Hoang_2014" class="csl-entry" role="listitem">
+<div class="csl-left-margin">42. </div><div class="csl-right-inline">Hoang, V. D. <a href="https://doi.org/10.1016/j.trac.2014.07.010">Wavelet-based spectral analysis</a>. <em><span>TrAC</span> Trends in Analytical Chemistry</em> <strong>62</strong>, 144–153 (2014).</div>
+</div>
+<div id="ref-Wiener49" class="csl-entry" role="listitem">
+<div class="csl-left-margin">43. </div><div class="csl-right-inline">Wiener, N. <em><span class="nocase">Extrapolation, Interpolation, and Smoothing of Stationary Time Series</span></em>. (Wiley, 1949).</div>
+</div>
+<div id="ref-Cadzow_1988" class="csl-entry" role="listitem">
+<div class="csl-left-margin">44. </div><div class="csl-right-inline">Cadzow, J. A. <a href="https://doi.org/10.1109/29.1488">Signal enhancement-a composite property mapping algorithm</a>. <em><span>IEEE</span> Transactions on Acoustics, Speech, and Signal Processing</em> <strong>36</strong>, 49–62 (1988).</div>
+</div>
+<div id="ref-Chiron_2014" class="csl-entry" role="listitem">
+<div class="csl-left-margin">45. </div><div class="csl-right-inline">Chiron, L., Agthoven, M. A. van, Kieffer, B., Rolando, C. &amp; Delsuc, M.-A. <a href="https://doi.org/10.1073/pnas.1306700111">Efficient denoising algorithms for large experimental datasets and their applications in fourier transform ion cyclotron resonance mass spectrometry</a>. <em>Proceedings of the National Academy of Sciences</em> <strong>111</strong>, 1385–1390 (2014).</div>
+</div>
+<div id="ref-Stern_2015" class="csl-entry" role="listitem">
+<div class="csl-left-margin">46. </div><div class="csl-right-inline">Stern, A. S. &amp; Hoch, J. C. <a href="https://doi.org/10.1002/mrc.4287">A new approach to compressed sensing for <span>NMR</span></a>. <em>Magnetic Resonance in Chemistry</em> <strong>53</strong>, 908–912 (2015).</div>
+</div>
+<div id="ref-Gamez_2016" class="csl-entry" role="listitem">
+<div class="csl-left-margin">47. </div><div class="csl-right-inline">Gamez, G. <a href="https://doi.org/10.1039/c6ja00262e">Compressed sensing in spectroscopy for chemical analysis</a>. <em>Journal of Analytical Atomic Spectrometry</em> <strong>31</strong>, 2165–2174 (2016).</div>
+</div>
+<div id="ref-Xie_2022" class="csl-entry" role="listitem">
+<div class="csl-left-margin">48. </div><div class="csl-right-inline">Xie, Y. R., Castro, D. C., Rubakhin, S. S., Sweedler, J. V. &amp; Lam, F. <a href="https://doi.org/10.1021/acs.analchem.1c05279"><span class="nocase">Enhancing the Throughput of FT Mass Spectrometry Imaging Using Joint Compressed Sensing and Subspace Modeling</span></a>. <em>Analytical Chemistry</em> <strong>94</strong>, 5335–5343 (2022).</div>
+</div>
+<div id="ref-Kazimierczuk_2015" class="csl-entry" role="listitem">
+<div class="csl-left-margin">49. </div><div class="csl-right-inline">Kazimierczuk, K. &amp; Orekhov, V. <a href="https://doi.org/10.1002/mrc.4284">Non-uniform sampling: Post-fourier era of <span>NMR</span> data collection and processing</a>. <em>Magnetic Resonance in Chemistry</em> <strong>53</strong>, 921–926 (2015).</div>
+</div>
+<div id="ref-Bray_2017" class="csl-entry" role="listitem">
+<div class="csl-left-margin">50. </div><div class="csl-right-inline">Bray, F. <em>et al.</em> <a href="https://doi.org/10.1021/acs.analchem.7b01850"><span class="nocase">Nonuniform Sampling Acquisition of Two-Dimensional Fourier Transform Ion Cyclotron Resonance Mass Spectrometry for Increased Mass Resolution of Tandem Mass Spectrometry Precursor Ions</span></a>. <em>Analytical Chemistry</em> <strong>89</strong>, 8589–8593 (2017).</div>
+</div>
+</div></section></div></main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      return note.innerHTML;
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
