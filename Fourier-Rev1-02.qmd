@@ -55,7 +55,7 @@ format :
     colorlinks: true
     keep-tex: true
     standalone: true
-    output-file: Fourier-R1
+    output-file: Fourier-R2
   html:
     toc: true
     toc-depth: 3
@@ -83,13 +83,6 @@ format :
 
 # Abstract {.unnumbered .unlisted}
 
-<!-- Many data analysis approaches rely on Fourier transform (FT), in particular in analytical chemistry.
-FT is a formidable tool.
-Albeit the central role of FT, it remains mysterious to many.
-We present a comprehensive presentation of FT, yet accessible for non-mathematician.
-We present theory and practice aspects.
-We show example of its applications in Mass spectrometry, NMR, Infrared and other analytical approaches
-We open-up the topic to possible extension -->
 
 Numerous data analysis methodologies heavily depend on the Fourier transform (FT), especially within analytical chemistry. FT is an incredibly potent and versatile tool, significantly influencing various scientific disciplines. Despite its prominence, FT often shrouds itself in an enigma for many. In response, we endeavour to provide an all-encompassing elucidation of FT, crafted to be comprehensible even to those not versed in advanced mathematics.
 This exposition embraces FT's theoretical underpinnings and practical applications, seeking to demystify this concept. Its utility is demonstrated through examples in diverse domains, such as Mass spectrometry, Nuclear Magnetic Resonance (NMR), Infrared spectroscopy, and various other analytical techniques.
@@ -214,10 +207,6 @@ where $f$ is the frequency (expressed in Hz for instance).
 $S(f)$ is usually called the *Spectrum* of $s(t)$.
 It is important to note that the frequency $f$, like the time $t$ in  [@eq-ftdef], goes from $-\infty$ to $+\infty$.
 
-<!-- Note how the expression under the integral sign is equivalent to the multiplication described in @fig-integral - since $e^{i f t}$ is the complex function built from $\cos f t$ and $\sin f t$.
-This exemplifies how the resulting function $S(f)$ presents a maximum for every frequencies present in $s(t)$
-Because of the imaginary exponent, the $S(f)$ spectrum has complex values.
-So maxima in the spectrum have to be understood in modulus. -->
 The expression under the integral sign performs the computation seen in [@fig-integral].
 The signal $s(t)$ is multiplied by a complex wave of frequency $-f$
 <!-- (remember that $e^{-2i \pi f t}$ is actually $\cos(-2 \pi f t) + i \sin(-2 \pi f t)$  -->
@@ -270,12 +259,6 @@ In the example above, the time signal, expressed in seconds,
 produces a frequency spectrum in Hz (which is defined as sec^-1^).
 The same kind of relation can be found in all experimental methods relying on FT.
 
-
-<!-- |Analysis type |Experimental method| Original signal (units)| Transformed signal (units) |
-| --- | --- | --- | --- |
-| Frequency analysis |NMR, FTMS| Time (sec) |Frequency (Hz)|
-| Interferometry | FTIR | Wavelength (μm) | Fringe count (cm^-1^)|
-| Crystallography | XRD | Atom coordinates (Å) | Diffraction pattern (Å^-1^) | -->
 
 | Analysis type      | Experimental method | Original signal (units)     | Transformed signal (units) |
 |------------------|------------------|------------------|------------------|
@@ -330,7 +313,6 @@ $$s_n = \frac{1}{\sqrt N} \sum_{n=0}^{N-1} e^{2i\pi \frac{kn}{N}} S_k$$ {#eq-dft
 
 The $\sqrt N$ coefficient is a simple scaling factor which insures the symmetry of the expressions.
 
-<!-- ### spectral resolution is determined by the measurement duration -->
 If we acquire $N$ real points with a sampling $\Delta t$ given by @eq-nyquist, we have a total acquisition time of $T_{max} = N \times \Delta t$.
 Similarly, we have $SW = F_{max} = N/2 \times \Delta f$.
 The 1/2 comes from the fact that  there are two values for each frequency (real and imaginary) because the Fourier spectrum is complex.
@@ -366,7 +348,6 @@ Box 1 goes through a rapid survey of the most useful ones and point out their im
 ### Symmetry properties 
 
 A FT spectrum is always a complex object.
-<!-- ^[several alternative definitions exist that do not depend on complex numbers (Hartley transform, discrete cosine transform), while valid on their own, these approaches have always to drop one are several properties of the genuine complex FT, properties important in harmonic analysis] -->
 Symmetries in the data impact the real and imaginary parts of the spectrum as shown in @fig-causal.
 Data symmetric relative to $t=0$ will present a spectrum with a null imaginary part,
 whereas antisymmetric data will have a null real part.
@@ -402,9 +383,6 @@ They are related by the Hilbert transform.
 The absorptive shape is narrower than the dispersive one thus displaying a higher resolution.
 This implies that a magnitude spectrum, where $S$ is replaced by $\sqrt{Re(S)^2 + Im(S)^2}$ - something you might have to do if the phase of the signal is unknown - presents a FWHM *(Full Width at Half Maximum)* about twice as large.
 
-<!-- *a bit theoretical, I put this here, even though it is not
-mandatory (we'll see) as it is not related to digital FT,
-and allows to present causality easily.* -->
 
 ### Convolution theorem
 The convolution is an operation (noted $\star$) on two functions ($f$ and $g$) that produces a third function ($f \star g$) that expresses how the shape of one is modified by the other.
@@ -540,11 +518,11 @@ In NMR a phase alternation of the excitation pulse in a two step phase program i
 An ideal signal peak after FT is represented by a pure cosine wave in the time domain, but real signals are usually a combination of sine and cosine waves, because the difference between those waves is only a phase shift – which is similar to a small shift in the detection time (see shift theorem).
 For this reason, the FT usually uses the exponential form, from Euler’s equation, which combines both sine and cosine waves into circularly polarised waves, from [@sec-euler].
 The real, measured signal is either a linearly polarised measurement, resulting in real numbers in the signal array, or a quadrature measurement, resulting in complex numbers in the signal array.
-NMR typically uses quadrature detection from two orthogonal magnetic sensors, by putting the two pairs of detected signal into the real and imaginary portions of the data variables for each independent time-step.
+NMR typically realizes quadrature detection using two mixers phase-shifted by $\pi \over 2$ for the demodulation to the intermediate fequency, and putting the two pairs of detected signal into the real and imaginary portions of the data variables for each independent time-step.
 Mass spectrometry, by contrast, usually just uses one set of electric field detectors and thus generates a single array of real valued numbers for the detected signal.
 
 Nevertheless,  because the real signals have a phase component and because the FT uses the exponential form which expresses each component wave as a circularly polarised wave (both sine and cosine components), the output array from the FT is an array of numbers with both real and imaginary components.
-If plotted directly into a plotting software like Matlab, Python, or R, the results are very confusing because all of the data points will be plotted on top of each other in a complex number representation diagram like [@fig-cpxplane].
+If plotted directly into a plotting software like Matlab, Python, or R, the complex spectra are confusing because of the superposition of the real and imaginary parts like in [@fig-causal].
 So, we traditionally plot either the real or the imaginary components, or we combine them by calculating the magnitude of the values as $M(\omega) = \sqrt{R^2(\omega) + I^2(\omega)}$.
 
 However, the magnitude mode combines the peak-shapes and noise from both the real and imaginary parts of the peak.
@@ -554,12 +532,30 @@ Ideally, we’d like to plot only the real part of the signal to avoid these pro
 However, as noted above in [@sec-euler], any signal can be rotated by an arbitrary angle, $\Phi$, by multiplying the signal by $e^{i\Phi}$, so you can correct the phase of all peaks in a spectrum (provided the the phase correction is determined over the whole spectrum), and get an immediate increase in resolution and signal-to-noise for all peaks in the spectrum.
 Rephasing of signals has been routine in NMR for decades, but has also become relatively easy for mass spectrometry in recent years.  
 
+### Zerofilling
+Zerofilling is the common process, prior to doing the Fourier transform, to pad the measured data set with extra zero-value data points either up to the next level of $2^n$ data points to optimize the algorithm speed, or even doubling the full data set size once or several times.
+
+Zerofilling forces the digital Fourier Transform to calculate overlap integrals and hence interrogate the real data set at additional frequency points, thus interpolating additional interleaved data points between each existing pair of frequencies, without degrading the spectral resolution as the new interleaved data points are placed on the existing peak-shape.
+This interpolating effect is helpful in extraction of peak-shape information as well as finding the centre of a peak (known as centroiding).
+This effect can be seen in [@fig-apod] where all spectra are computed on a constant number of points regardless of the length of the acquisition.
+
+One important point is related to the fact that a FT spectrum is a complex object, where information is coded in the position and the phase of the spectral features.
+In spectroscopy, we are generally more interested in the precise position of the frequency peaks, so we might want to optimize the position information to the detriment of the phase, as phase is rather difficult to be handled and represented.
+For this reason, spectra with random phases are usually presented in magnitude, while "phased" spectra are presented only by their real channel.
+In consequence, if no zerofilling is applied, only $N/2$ frequency channels are presented after FT for $N$ real (or $N/2$ complex pairs) experimental points, thus losing precious information.
+This information is recovered by applying a $N$ points zerofiling to the data which allows to obtain $N$ frequency channels in the spectrum and recover all the experimental information in the real spectrum.
+As a consequence, a general rule-of-thumb is to always at least double the size of the measure by zerofilling not to loose any information.
+Additional zerofilling, generally produces smoother spectra, but only consists in a mere interpolation of the spectral points (called the Whittaker–Shannon interpolation - here applied in the frequency domain) 
+
 ### Apodisation
-The peak-shape after the FT is a convolution of the FT of a pure sinusoidal wave (a *delta* function), the detection box range (a *sinc* function), and the FT of the damping function, $e^{-\frac{t}{\tau}}$ (a Lorentzian peak-shape, very sharp, with long tails).
+The peak-shape after the FT is a convolution of the FT of a pure frequency wave (a *delta* function),
+of the FT of the damping function, typically an exponential decay with characteristic time (a Lorentzian peak-shape see @fig-pairs),
+and eventually of the the detection box range if zerofilling is applied (a *sinc* function).
 If the signal is almost undamped and truncated, this convolution results in side-lobe peaks in the spectrum.
 One simple way to suppress these side-lobes is to multiply the time-domain signal by a smooth function such as a Gaussian or a half-sine to smooth out the abrupt start and stop of the signals, prior to the FT.
-This multiplication is called apodisation (or windowing) and further convolves the peak-shape with the FT of the convolution function and can smooth out the side-lobes at the cost of slightly wider peaks with slightly lower resolution.[@Qi_2014]
-See [@fig-apod] for an illustration.
+This multiplication is called apodisation (or windowing) and further convolves the peak-shape with the FT of the apodisation function and can smooth out the side-lobes at the cost of slightly wider peaks with slightly lower resolution.[@Qi_2014]
+See [@fig-apod] for an illustration of the various apodisation effects.
+
 
 ```{python}
 #| echo: false
@@ -573,7 +569,7 @@ Fourier_Fig.Figcomb()
 
 In addition to correcting the line-shape, apodisation may affect the SNR.
 The noise is generally of constant amplitude along the acquisition.
-For a damping signal such as the top signal in [@fig-apod], the signal-to-noise ratio is thus decaying over the   acquisition length to the point that the signal falls below the noise level at the end of the measurement.
+For a damping signal such as the top signal in [@fig-apod], the signal-to-noise ratio is thus decaying over the acquisition length to the point that the signal falls below the noise level at the end of the measurement.
 Multiplying the measured signal with a decaying function increases the weight of the regions with a large SNR, and has the effect of increasing the SNR in the spectrum.
 
 Taking the same resonance with $\tau=1$ second, but with 30% random Gaussian noise added and measured for a duration of $3 \tau$, one can apply an $e^{-t/\tau}$ apodisation to  it, the result is shown in  [@fig-apod] i/
@@ -581,22 +577,13 @@ This is equivalent to smoothing in the spectrum, which reduces the noise optimal
 Note the impressive gain in SNR in the spectrum vs the SNR in the time domain (where the resonance is barely visible), on the order of the square root of the number of points (here N=60.000 hence approximately 250x ).
 
 It is possible to combine the noise reduction approach to the shape narrowing with a slightly more involved operation.
-[@fig-apod] j/ shows the result of an operation called Gaussian enhancement, where the dataset is multiplied by the increasing exponential $e^{t/\tau}$, somehow removing the line-width and then apodised by the Gaussian $e^{-(t/\tau)^2}$, reducing the noise while maintaining the line-width or even improving the tail of the line.
+[@fig-apod] j/ shows the result of an operation called Gaussian enhancement, where the dataset is multiplied by the increasing exponential $e^{t/\tau}$, removing the line-width and then apodised by the Gaussian $e^{-(t/\tau)^2}$, reducing the noise while maintaining the line-width or even improving the tail of the line.
 Note that the noise is decreased, while the original line-width is nearly restored.
-
-### Zerofilling
-Zerofilling is the common process, prior to doing the Fourier transform, to pad the measured data set with extra zero-value data points either up to the next level of $2^n$ data points to optimize the algorithm speed, or even doubling the full data set size once or several times.
-
-Zerofilling forces the digital Fourier Transform to calculate overlap integrals and hence interrogate the real data set at additional frequency points, thus interpolating additional interleaved data points between each existing pair of frequencies, without degrading the spectral resolution as the new interleaved data points are placed on the existing peak-shape.
-This interpolating effect is helpful in extraction of peak-shape information as well as finding the centre of a peak (known as centroiding).
-This effect can be seen in [@fig-apod] where all spectra are computed on a constant number of points regardless of the length of the acquisition.
-
-The FT of $N$ real data points or of $N/2$ complex pairs of data points produces a spectrum of $N/2$ complex pairs, and thus only $N/2$ frequency channels, so you will need one level of zerofilling to have $N$ data points and not lose information, in consequence, the rule-of-thumb is to always use at least double the size of the measure by zerofilling not to loose any information.
 
 # Applications
 
 ## Fourier transform mass spectrometry (FTMS)
-Several types of mass spectrometers use the Fourier transform to extract frequencies that are related to molecular masses from signals.  The two most common of such instruments are the Fourier transform ion cyclotron resonance mass spectrometery (FTICR-MS, recently branded as ‘magnetic resonance mass spectrometry, MRMS’ by Bruker) and the Orbitrap.
+Several types of mass spectrometers use the Fourier transform to extract frequencies that are related to molecular masses from signals.  The two most common of such instruments are the Fourier transform ion cyclotron resonance mass spectrometery (FTICR-MS, recently branded as ‘magnetic resonance mass spectrometry, or MRMS’) and the Orbitrap.
 Other, less common FTMS instruments are the electrostatic linear ion trap (ELIT) and the Fourier-transform ion trap.  
 
 *FTICR-MS.*
@@ -639,7 +626,7 @@ with a ratio characteristic of the atom type (the gyromagnetic ratio).
 The material containing the spin, when excited with an additional pulsed magnetic field
 tuned to the spin resonance frequency will emit in return a weak magnetic field oscillating
 with this frequency, the Nuclear Magnetic Resonance signal (NMR).[@Ernst_1992; @ernst1990principles]
-Atoms have different environments depending on the molecular structure (for instance, hydrogens are borne by aliphatic or aromatic carbons, by CH~2~  CH~3~ or hetero-atoms), these differences lead to minute resonance differences, which allows to assign the signals, and characterize atom interactions in space.[@W_thrich_2003].
+Atoms have different environments depending on the molecular structure (for instance, hydrogens are borne by aliphatic or aromatic carbons, or hetero-atoms), these differences lead to minute resonance differences, which allows to assign the signals, and characterize atom interactions in space.[@W_thrich_2003].
 In liquids, the resonant signal has a long lifetime allowing narrow resonance lines and resolved spectra.
 
 ### Experimental procedure
@@ -689,15 +676,6 @@ However, in the case of absorption spectroscopy, where the information is in the
 Several remarkable examples of  FTIR applications and, more generally, all FT spectroscopy are crucial to sample analyses across chemical and environmental sciences, encompassing various domains such as atmosphere, water, minerals, and organic materials. FTIR instruments find utility in environmental analyses of the atmosphere deployed in situ on the ground and in outer space. In mineralogy and petrology, it proves invaluable for laboratory-based examinations of diverse samples, including those derived from spatial missions.
 In astrophysics, research teams engaged in Cosmic Microwave Background (CMB) studies or exploring the interstellar medium, where pronounced signatures are evident in the millimetre and sub-millimetre ranges, often rely on Fourier spectroscopic techniques.
 
-<!-- PIERRE/ -->
-<!-- Concernant les applications des spectro par TF effectivement il y a pas mal de chose sans être exhaustif:
-- les équipes qui travaillent sur le CMB (fond cosmologique ) ou le le milieu interstellaire qui ont de fortes signature dans le millimétrique et le sub millimétrique utile surtout des technique spectro de Fourier 
-- pour les analyses atmosphériques les FTIR sont utilisé soit en chambre de simulation (une grosse au LISA à Créteil) soit in Situ au sol et dans l’espace.
-- en minéralogie / pétrologie pour les analyses d’échantillons en laboratoire (retour d’échantillons spatiaux par exemple)
-Globalement nos plateformes analytiques INSU en ont toujours pour les analyses de prélèvement dans les sciences de l’environnement (eaux sont ces différentes formes, air, minéraux, matières organiques etc …)
-
-The concept of Stationary-Wave Integrated Fourier Transform Spectrometer (SWIFTS), provides on-chip spectro-detection. The detection is achieved along a standing waves within a single mode waveguide by probing its evanescent field, using nano-detectors. Based on this concept a motionless device is able to probe the spectral information of the incoming signal. Such a concept is convenient for analyses that deal with single mode collection of the light, under diffraction limited condition. -->
-<!-- / PIERRE -->
 
 ## Fourier Transform in Imaging
 FT is heavily used in all forms of analytical methods which rely on any image creation or image analysis: microscopy of any kind (visible, fluorescence, Raman, Electronic, etc.), Magnetic Resonance Imaging (MRI), or even X-ray diffraction.
@@ -727,7 +705,7 @@ The interactions are coded as a whole in the dataset.
 Information is transferred from the first evolution during $t_1$ to the acquisition during $t_2$ as a modulation of the phase or intensity of each signal.
 Performing an FT with respect to $t_2$ leads to a series of regular spectra, where each signal carries the information of the connected signals, modulated at the frequency of these other signals.
 A second FT respective to $t_1$ leads to a 2D spectrum, where each peak has two frequency coordinates, $F_1$ and $F_2$, corresponding to the signal before ($F_1$) and after ($F_2$) the transfer that occurred during the experiment.
-Note that the FT used in multidimensional processing is not strictly equivalent to the FT used in image or diffraction analysis, but uses slightly different mathematics which allow to compute a different phase for each frequency axis.[@Ernst87; @Delsuc_1988]
+Note that the FT used in multidimensional processing is not strictly equivalent to the FT used in image or diffraction analysis, but uses slightly different mathematics which allow to compute a different phase for each frequency axis.[@Ernst87; @Delsuc_1988; @Orekhov_2023]
 
 This idea has led to significant developments over the years[@Aue_1976; @ernst1990principles; @Jeener_2007; @Keeler_2010], and many different experiments have been designed with various types of transfers, such as spin-spin interactions, spatial proximity, and chemical exchange, among others.
 Homo-nuclear experiments typically involve the same kind of spins (usually ^1^H), while hetero-nuclear experiments involve different kinds of spins (such as ^13^C and ^1^H).
@@ -765,7 +743,7 @@ This choice is becoming a trend in cryo-EM, X-ray crystallography, or NMR techni
 Regarding analytical methods that rely on FT, the problem extends to the software used to process the data and the set of parameters applied.
 What was performed should clearly be stated, and all the information needed to reproduce the exact same computation should be provided.
 In this respect, an open-source software that states all operation details, and allows access to the internal algorithms is required.
-Many such programs are available in X-ray crystallography, NMR, or FTICR[@CCP4;@NMRglue;@Spike;@Rusconi_2021].
+Many such programs are available in X-ray crystallography, NMR, or FTICR[@CCP4;@NMRglue;@Spike;@Maciejewski_2017;@Rusconi_2021].
 However, it becomes challenging if a piece of software in the analysis pipeline is not open-source, such as an accessory sold by the instrument manufacturer as an improvement over competitors.
 
 In addition to the above measures, open data repositories should be maintained following four key principles: Findability, Accessibility, Interoperability, and Reusability (FAIR)[@Wilkinson_2016] proposed to guide the management and sharing of research data.
@@ -842,7 +820,7 @@ However, significant challenges lie in developing efficient algorithms that full
 
 Obtaining a fully accurate FT spectrum can be overwhelming for large datasets.
 One interesting solution is in the development of fast, approximate estimation techniques.
-These techniques aim to accurately represent the Fourier spectrum while significantly reducing the computational burden.
+These techniques aim to accurately represent the Fourier spectrum while significantly reducing the computational burden.[@Pustovalova_2018;@Rajaby_2022]
 
 ### Long term Storage Challenges
 Storage of extensive experimental data poses significant challenges in various domains, and Fourier approaches can provide valuable solutions to address these issues.
@@ -875,7 +853,7 @@ Non-FT methods like wavelet transform, filter diagonalisation, or Chirp z-transf
 These approaches will have to be improved to allow the analysis of rapidly varying signals and to precisely follow the frequencies of unstable sources.
 
 Compressed sensing is a revolutionary approach that enables the reconstruction of signals from significantly fewer samples than traditionally required and has been successfully applied to NUS data and corrupted ones.
-It leverages the sparsity of signals in the Fourier spectrum to recover accurate information.
+It leverages the sparsity of signals in the Fourier spectrum to recover accurate information.[@Candes_2006; @Donoho_2006]
 Based on assumptions different from the central assumptions of the classical Fourier theory, it even allows, in certain conditions, to overcome the Nyquist theorem in the time domain (sub-Nyquist sampling) and the frequency domain (super-resolution)
 in a manner not unrelated to the optical super-resolution approaches which overcome the diffraction limits in microscopy.
 
@@ -896,40 +874,6 @@ Despite the significant strides made in integrating ML and FT techniques, the op
 Exploring how these approaches can adapt to evolving data characteristics is a fascinating avenue for future research.
 The dynamic interplay between machine learning algorithms and Fourier Transform techniques holds the promise of unlocking new dimensions in analytical science, paving the way for more efficient and adaptive signal processing methodologies.
 
-<!-- We have seen that Fourier Transform is a central tool for several analytical science.
-
-The simple task of decomposing a signal into its constituent frequencies, as simple as it seems, allows an in-depth understanding of the signal properties.
-
-The Fourier Transform versatibility opens possibilities such as noise filtering, resolution enhancement, and ...
-
-With the help of modern computers and clever algorithm, Fourier Transform can be now used to analyse large and complex data-sets.
-
-Finally, Machine Learning (ML) and Artificial intelligence (AI) techniques, such as deep learning or neural networks, are being applied to analyse spectra and images in an automatic and unbiaised manner.
-These techniques have also been proposed for deconvolution approaches and denoising.
-
-What the most effective ways to combine ML and FT techniques for optimised signal processing and feature extraction are and how these approaches can adapt to changing data characteristics are still open questions.
-
-### AI Integration
-Finally, Machine Learning (ML) and Artificial intelligence (AI) techniques, such as deep learning or neural networks, are being applied to analyse spectra and images in an automatic and unbiaised manner.
-These techniques have also been proposed for deconvolution approaches and denoising.
-
-What the most effective ways to combine ML and FT techniques for optimised signal processing and feature extraction are and how these approaches can adapt to changing data characteristics are still open questions.
- -->
-
-
-<!-- ## Priorities for the Next 5-10 Years:
-
-*MAD: I have been out of inspiration for this part, just jotted a few ideas...*
-
-Over the next 5-10 years, priorities in Fourier transform processing may include:
-
-Efficiency and Scalability: Developing more efficient algorithms and scalable solutions for processing increasingly large datasets in real-time or near-real-time applications.
-
-Interdisciplinary Collaboration: Encouraging collaboration between researchers in mathematics, signal processing, computer science, and domain-specific fields to advance Fourier transform techniques tailored to specific applications.
-
-Standardization: Establishing standards for data representation, metadata, and storage formats to facilitate data interoperability and sharing across domains.
-
-Hybrid Approaches: Investigating hybrid methods that combine traditional Fourier analysis with non-standard approaches and AI to leverage the strengths of each for improved results. -->
 
 # Acknowledgments {.unnumbered .unlisted}
 The authors thank P.Kern for correcting the text and helpfull advises on its content.
@@ -997,7 +941,7 @@ educational company.
 
 # Box 1 {.unnumbered}
 
-::: {.callout-tip title="Basic FT properties" icon=false}
+::: {.callout-tip title="Some basic FT properties" icon=false}
 **Linearity:** the FT of the sum of two signals equals the sum of their respective FTs.
 This property follows directly from the definition in @eq-ftdef.
 It is fundamental that two signals superimposed in the time domain with different frequencies,
