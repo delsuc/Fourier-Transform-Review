@@ -1,6 +1,10 @@
 ---
 title:
   The Fourier Transform in Analytical Chemistry
+subtitle:
+  revised-version  $\newline$
+  non-peer reviewed version $\newline$
+  *confidential version, do not distribute*
 lang: en
 date: today
 author:
@@ -70,7 +74,7 @@ format :
     colorlinks: true
     keep-tex: true
     standalone: true
-    output-file: Fourier-R1
+    output-file: Fourier-R2
     # template-partials:
     #   - title.tex
   docx:
@@ -343,7 +347,9 @@ Thanks to FFT, it is possible on modern computers to compute the FT of datasets 
 The FT, as well as the DFT, its computer counterpart, possesses many properties, very useful for data analysis.
 Box 1 goes through a rapid survey of the most useful ones and point out their implications with the analysis process, most of these properties can be observed in the @fig-ft1 example.
 
+::: {.callout-tip title="Some basic FT properties" icon=false}
 **Insert BOX 1 HERE**
+:::
 
 ### Symmetry properties 
 
@@ -678,15 +684,23 @@ In astrophysics, research teams engaged in Cosmic Microwave Background (CMB) stu
 
 
 ## Fourier Transform in Imaging
-FT is heavily used in all forms of analytical methods which rely on any image creation or image analysis: microscopy of any kind (visible, fluorescence, Raman, Electronic, etc.), Magnetic Resonance Imaging (MRI), or even X-ray diffraction.
+FT is heavily used in all forms of analytical methods which rely on any image creation or image analysis: microscopy of any kind (visible, fluorescence, Raman, Electronic, etc.),
+Magnetic Resonance Imaging (MRI), or even X-ray diffraction.
 
-All the properties and theorems presented in section [@sec-expe] and [@sec-results] still hold but have to be interpreted with care, as the direct and reciprocal domains are defined differently.
+In image analysis, the direct domain is the physical space $(x,y)$ or $(x,y,z)$ (in Å, µm or Mpc !) and the reciprocal space is related to spacial frequencies in the image, noted here $(\xi, \upsilon, \zeta)$.
+The definition of FT in @eq-ftdef and @eq-ftm1def has to be extended to 2 or 3 dimensions as follows (here in 3D):
+
+$$ \text{FT}_{3D}[s(x,y,z)] = S(\xi, \upsilon, \zeta) =  \iiint_{-\infty}^{+\infty} s(x,y,z) e^{-2i \pi (\xi x + \upsilon y + \zeta z)} dx dy dz$$ {#eq-2DFT}
+
+$$ \text{FT}_{3D}^{-1}[S(\xi, \upsilon, \zeta)] = s(x,y,z) =  \iiint_{-\infty}^{+\infty} S(\xi, \upsilon, \zeta) e^{2i \pi (\xi x + \upsilon y+ \zeta z)} d\xi d\upsilon d\zeta$$
+
+All the properties and theorems presented in section [@sec-expe] and [@sec-results] still hold but have to be interpreted with care, as the direct and reciprocal domains, being multidimentionnal, are defined differently.
 
 In direct imaging approaches such as microscopy, FT is not used to produce the result but to apply some operations in the reciprocal domain that would be cumbersome, if not impossible, in the image domain (see @sec-reciprocal).
 Such operation typically includes blurring or de-blurring, de-noising, de-screening, enhancement, deconvolution, and resampling. However, the results here are estimated on the image itself, so the process implies an inverse FT at the end.
 
 MRI and X-ray diffraction are similar to spectrometries, as the result is an image (or rather a 3D volume), which requires the FT of the experimental data acquired as a diffraction pattern of the object of interest.
-Somehow, the X-ray beam diffracting in the crystal, or the magnetic field gradient dispersing the spin resonances, perform an analogue FT of the studied object.
+Somehow, the X-ray beam diffracting in the crystal, or the magnetic field gradient dispersing the spin resonances, perform an analogic FT of the studied object, and a simple 3D FT restores the studied volume.
 Alas, in the case of X-ray, the detector cannot detect the X-ray phase (unless you are using XFELs [@Georgescu_2020]), and special phasing techniques must be used to recover this lost information.
 
 ## Multi-Dimensional spectrometry
@@ -705,7 +719,8 @@ The interactions are coded as a whole in the dataset.
 Information is transferred from the first evolution during $t_1$ to the acquisition during $t_2$ as a modulation of the phase or intensity of each signal.
 Performing an FT with respect to $t_2$ leads to a series of regular spectra, where each signal carries the information of the connected signals, modulated at the frequency of these other signals.
 A second FT respective to $t_1$ leads to a 2D spectrum, where each peak has two frequency coordinates, $F_1$ and $F_2$, corresponding to the signal before ($F_1$) and after ($F_2$) the transfer that occurred during the experiment.
-Note that the FT used in multidimensional processing is not strictly equivalent to the FT used in image or diffraction analysis, but uses slightly different mathematics which allow to compute a different phase for each frequency axis.[@Ernst87; @Delsuc_1988; @Orekhov_2023]
+Note that the FT used in multidimensional processing is not equivalent to the FT used in image or diffraction analysis, but similar to two sequential 1D FT.
+It uses slightly different mathematics which allow to compute a different phase for each frequency axis.[@Ernst87; @Delsuc_1988; @Orekhov_2023]
 
 This idea has led to significant developments over the years[@Aue_1976; @ernst1990principles; @Jeener_2007; @Keeler_2010], and many different experiments have been designed with various types of transfers, such as spin-spin interactions, spatial proximity, and chemical exchange, among others.
 Homo-nuclear experiments typically involve the same kind of spins (usually ^1^H), while hetero-nuclear experiments involve different kinds of spins (such as ^13^C and ^1^H).
@@ -958,6 +973,17 @@ The inverse FT is the same operation with a sign inversion of the axis (see @eq-
 For this reason, applying the FT twice inverts the data, and applying it four times has no effect
 (very much like a 90° rotation would do on the 2D plane).
 
+**Shift theorem:** There is a relationship between the position in one domain and the phase in the reciprocal domain.
+From the property of the exponentiation: $e^{a+b} = e^a e^b$ and the definition of FT (@eq-ftdef)
+it is possible to show the two related expressions for $s(t)$ and $S(f)$ related by FT:
+
+- $s(t-t_0)$ is transformed into $e^{-2i\pi f t_0}S(f) \qquad$ <br>
+and
+- $e^{i 2 \pi f_0 t}s(t)$ is transformed into $S(f - f_0)$.
+
+in other words, a time shift $t_0$ in the signal creates in the spectrum a phase shift proportional to the frequency,
+and multiplying the signal with a constant frequency $f_0$ shifts the spectrum by this frequency.
+
 **Compaction-dilation:** a compact signal in one domain is wide in the reciprocal domain. 
 This again is seen in @fig-ft1 where the slowly decaying time component (in red) corresponds to the sharpest peak; 
 while the faster decaying component (in green) (so more compact in the time domain) presents a broad line (less compact in the frequency domain).
@@ -969,5 +995,9 @@ This can be seen as the extreme case of the compaction-dilation property above.
 :::
 
 {{< pagebreak >}}
+
+# Code availability {.unnumbered}
+
+The code used to generate the figures can be found at [https://github.com/delsuc/Fourier-Transform-Review](https://github.com/delsuc/Fourier-Transform-Review)
 
 # References {.unnumbered}
