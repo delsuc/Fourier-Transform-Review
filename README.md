@@ -9,6 +9,10 @@ Furthermore, potential extensions and applications of FT are explored, evoking t
 
 ## Files organisation
 
+The reference text is `Fourier-R2.pdf`
+
+There is also an html version, (get also the Fourier-Rev1-02_files folder)
+
 The text is produced with the [quarto](https://quarto.org) program
 
 - The `*.qmd` file is the master document
