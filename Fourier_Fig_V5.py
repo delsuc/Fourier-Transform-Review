@@ -30,7 +30,7 @@ matplotlib.rcParams["axes.spines.top"] =    False
 matplotlib.rcParams["axes.spines.right"] =  False
 
 Blu = '#3973ac'
-Red = '#ff751a'
+Red = '#ff4c1a' #ff751a'
 Grin = '#59b300'
 
 for i in ('font.size','axes.labelsize','legend.fontsize','legend.title_fontsize'):

@@ -120,8 +120,9 @@ This concept, if considered in the opposite direction, also means that the solut
 
 The FT is actually extremely common to see in real life.
 Diffraction patterns of sea waves entering a harbour or rainbows reflected from a body of water or rain droplets are a filtered and distributed set of sinusoidal waves.
-The classic cinematic effect of wheels or propellers appearing to stop and start to rotate backwards as they speed up is an expression of the **Nyquist criterion** discussed below in [@sec-expe].
-The star-like diffraction patterns that you see when looking at distant lights at night is due to the errors in the Nyquist discretization of the signal by the light sensitive cells on the retina of your eye, which is effectively a biological digitization of the signal.
+The classic cinematic effect of wheels or propellers appearing to stop and start to rotate backwards as they speed up is an expression of the **Sampling criterion** discussed below in [@sec-expe].
+The star-like diffraction patterns that you see when looking at distant lights at night is due to the errors in the
+discretization of the signal by the light sensitive cells on the retina of your eye, which is effectively a biological digitization of the signal.
 Many, if not most, real-world physical phenomena are expressible as a series of a discrete set of periodic functions.
 
 ### Sine and Cosine
@@ -227,15 +228,14 @@ The great strength of the FT is that it is fully invertible, meaning that you ca
 
 $$ \text{FT}^{-1}[S(f)] = s(t) =  \int_{-\infty}^{+\infty} S(f) e^{2i \pi f t} df $$ {#eq-ftm1def}
 
-
 ### Worked example
 With the definitions above, we can now compute the FT of a signal.
 Let us posit a signal composed of $K$ different components with different characteristic frequencies $f_k$ and amplitudes $A_k$, starting at time $t=0$ with a phases $\phi_k$, and decaying with different time constants $\tau_k$.
 This signal $s(t)$ can be written in complex notations as:
-$$s(t) = \sum_k^K A_k e^{-\frac t {\tau_k}} e^{ i (2\pi f_k t + \phi_k)} $$ {#eq-12}
+$$s(t) = \sum_k^K \; A_k e^{-\frac t {\tau_k}} \; e^{ i (2\pi f_k t + \phi_k)} $$ {#eq-12}
 Note that the signal components can reorganized as the product of a time independent term and a time dependent term, both of them complex, as follows:
-$$s(t) = \sum_k^K A_k e^{i\phi_k} \; e^{t (-\frac 1 {\tau_k} + i 2\pi f_k ) } $$ {#eq-12cpx}
-The time independent term $A_k e^{i\phi_k}$ is the complex amplitude of the compnent, while the complex value $e^{(-\frac 1 {\tau_k} + i 2\pi f_k )}$ which acts on the time, fully caracterizes the time evolution.
+$$s(t) = \sum_k^K \; A_k e^{i\phi_k} \; e^{(-\frac 1 {\tau_k} + i 2\pi f_k ) t} $$ {#eq-12cpx}
+The time independent term $A_k e^{i\phi_k}$ is the complex amplitude of the component, while the complex value $e^{(-\frac 1 {\tau_k} + i 2\pi f_k )}$ which acts on the time, fully caracterizes the time evolution.
 <!-- ; this quantity is sometimes called the caracteristic pole of the component. -->
 
 ```{python}
@@ -287,7 +287,7 @@ However, this signal is usually sampled and digitised in order to be handled num
 At this stage, we will only consider a regular sampling, characterised by a periodic sampling every $\Delta t$
 or by its sampling frequency $F_S = \frac{1}{\Delta t}$.
 With such a sampling, $F_{max}$, 
-the *Nyquist criterion* states that
+the *Sampling criterion* states that
 the largest frequency in the signal that can be faithfully recovered is only half of the sampling frequency.
 
 Signals with a frequency greater than $F_{max}$ cannot be analysed correctly and will appear folded back ( or *aliased* ) into the $[ 0..F_{max} ]$ window.
@@ -295,8 +295,9 @@ Signals with a frequency greater than $F_{max}$ cannot be analysed correctly and
 This frequency window defines the measure *spectral width* $SW$.
 
 The spectral width $SW$ is related to the sampling rate:
-$$ SW = \frac{1}{2 \Delta t} \qquad \text{or} \qquad \Delta t = \frac{1}{2 SW}$$  {#eq-nyquist}
-@eq-nyquist is known as the Nyquist-Shannon theorem, and the rate $\Delta t$ is called the Nyquist sampling rate.
+$$ SW = \frac{1}{2 \Delta t} \qquad \text{or} \qquad \Delta t = \frac{1}{2 SW}$$  {#eq-Sampling}
+@eq-Sampling is the sampling theorem, and the rate $\Delta t$ is called the Nyquist sampling rate.
+This important result is found in the classical work from C.E.Shannon [@Shannon_1948], but was previously discovered by several other authors, and is also known as the Shannon theorem or Nyquist-Shannon theorem.
   
 ### The Discrete Fourier Transform
 FT, *as @eq-ftdef,* can produce the spectrum of a sequence of regularly spaced samples over a given time by using the definition above. However, this would produce a continuous function expanding to infinity that a computer cannot handle easily.
@@ -305,7 +306,7 @@ It is possible to represent this spectrum with a sequence of values $S_k$ of the
 regularly sampling the continuous spectrum with a spacing $\Delta f$.
 
 The **Discrete Fourier Transform** (or DFT) is the numeric operation which transforms the sampled (discrete) series into its discrete spectrum. 
-It is equivalent in many points to the analytical FT and shares most of its characteristics, with the notable exception of the Nyquist theorem presented above, a property of the sampling operation, not of the FT itself.
+It is equivalent in many points to the analytical FT and shares most of its characteristics, with the notable exception of the Sampling theorem presented above, a property of the sampling operation, not of the FT itself.
 
 The operation is linear and can be expressed as a multiplication of the initial dataset with a $N \times N$ square matrix.
 For a sequence $s_n$ of length $N$, its DFT $S$ is a series given by :
@@ -317,16 +318,16 @@ $$s_n = \frac{1}{\sqrt N} \sum_{n=0}^{N-1} e^{2i\pi \frac{kn}{N}} S_k$$ {#eq-dft
 
 The $\sqrt N$ coefficient is a simple scaling factor which insures the symmetry of the expressions.
 
-If we acquire $N$ real points with a sampling $\Delta t$ given by @eq-nyquist, we have a total acquisition time of $T_{max} = N \times \Delta t$.
-Similarly, we have $SW = F_{max} = N/2 \times \Delta f$.
+If we acquire $N$ real points with a sampling $\Delta t$ given by @eq-Sampling, we have a total acquisition time of $T_{max} = N \times \Delta t$.
+Similarly, we have for the spectral width $SW = F_{max} = N/2 \times \Delta f$.
 The 1/2 comes from the fact that  there are two values for each frequency (real and imaginary) because the Fourier spectrum is complex.
-Combining these two expressions with @eq-nyquist, it comes:
+Combining these two expressions with @eq-Sampling, it comes:
 $$\Delta f = \frac 1 {T_{max}}$$ {#eq-resolution}
 which tells that the digital resolution of the spectrum is related to total acquisition time.
-This relation is the equivalent of the Nyquist theorem for the frequency spectrum.
+This relation is the equivalent of the Sampling theorem for the frequency spectrum.
 It is not a coincidence if this expression, in the form
 $\Delta f \times  T_{max} = 1$
-is reminiscent with the Heisenberg uncertainty principle, and is sometimes called the Fourier uncertainty principle.
+is reminiscent with the Heisenberg uncertainty principle, and is sometimes called the Fourier uncertainty principle.[@Hogan2005]
 
 ### Fast Discrete Fourier Transform {#sec-fft}
 The expression given above in @eq-dft for DFT is a matrix multiplication.
@@ -441,19 +442,19 @@ $\approx \dfrac{0.6}{\tau}$.
 The various notions presented above have a deep impact on the way an experiment should be set-up, processed and analysed.
 
 ### Effects of the discretization
-The Shannon-Nyquist theorem ([@eq-nyquist]), is a direct result of the discretization of the real signal data.
+The Sampling theorem ([@eq-Sampling]), is a direct result of the discretization of the real signal data.
 If you only acquire the signal at specific, pre-defined time-steps, you are going to miss any subtleties in the data that happen faster than that, and sometimes those events, if they are periodic, will actually appear to occur at a much lower frequency, effectively ‘folded back’ onto the frequency range of $0\ldots F_{max}$.
 In videos, if the frame-rate of the camera is slower than the event, birds can appear to be flying without flapping their wings, wheels and propellers can appear to stop or rotate backwards, and runners’ legs can appear to be running backwards although they are clearly moving forwards.
 These admittedly odd effects occur because the real event is being recorded at discrete time steps that are slower than the actual event.
-It turns out, the Shannon-Nyquist theory defines that to most-accurately record a time-varying signal, the digitization time-step must be at least $2 \times$ faster than the event.
+It turns out, the sampling theorem defines that to most-accurately record a time-varying signal, the digitization time-step must be at least $2 \times$ faster than the event.
 For real analytical signals, that means that you have to choose the acquisition rate at least $2 \times$ higher than the maximum frequency signal you expect to see.
-In any case, it is always advised to use a high quality low-pass filter to remove signals above the highest expected frequency, usually the Nyquist frequency, to avoid spurious signals and noise folding back into the spectrum.
+In any case, it is always advised to use a high quality low-pass filter to remove signals above the highest expected frequency, usually half the sampling frequency, to avoid spurious signals and noise folding back into the spectrum.
 
 Another effect of sampling a signal at discrete time-steps is that most signals will not exactly match to an integer multiple of your chosen acquisition rate, so they will ‘fall between the cracks’ of the sampling.
 This will result in the signals being imperfectly represented in the digitized signal, which expresses after FT as a skewed or noisy and clearly imperfect spectrum, and often can result in odd ‘triangular’ or ‘boxy’ peaks.
 For decaying signals this leads to an effect that looks like a phase error, zerofilling will restore a symmetrical line-shape is used
 
-Provided the Nyquist criterion is met, then after the FT the signal will be composed of peaks as above in Figures 3-5.
+Provided the sampling criterion is met, then after the FT the signal will be composed of peaks as above in Figures 3-5.
 The width of each peak is defined by the length of the signal, limited either by the acquisition length for a stationary signal, or by the decay of the signal, whichever is shorter.
 So, to get high resolution (skinny peaks), you need to have a long, stable signal in the time domain, and a suitably long measurement, to insure a sufficient sampling of the frequency spectrum, as the digital resolution of the spectrum is governed by the length of the acquisition window rather than the the actual number of samples (check [@eq-resolution]).
 
@@ -471,7 +472,7 @@ These fluctuations creates a decoherence of the spins and a decay of the experim
 
 Regardless of the physical forces that cause the signal decay, for high resolution it is important that the signal life time is equal or shorter than the detected transient length.
 For maximum resolution, the usual ‘rule of thumb’ is that the detected transient length should be approximately $3\tau$.[@Qi_2014]
-Thus, given the chosen data acquisition rate (keeping the Nyquist limit, above in mind), the total number of data points required is readily calculated – if the operator knows the value of $\tau$.
+Thus, given the chosen data acquisition rate (keeping the Sampling limit, above in mind), the total number of data points required is readily calculated – if the operator knows the value of $\tau$.
 If this value is not known, it is straightforward to estimate by acquiring a longer-than-needed transient and shortening the transient either by apodisation (see below) or truncation and plotting the intensity of the spectral peaks versus the length or time-segment of the time-domain signal.
 
 Alternatively, if a particular resolution is required, the length of the transient can be readily calculated.  The number $N$ of points to acquire should be large enough to allow $T_{max} = N \Delta t$ to accommodate the longest expected signal (and thus the sharpest peak), and @eq-resolution ensures that the spectral resolution will be sufficient to resolve this signal.
@@ -645,7 +646,7 @@ a brief strong pulse in the centre of this range suffices to excite the whole sp
 A carrier with a frequency in the centre of the NMR spectrum is usually used to demodulate the signal and record only the frequency difference between the signal and the carrier, allowing a narrower spectral width (and a slower sampling rate).
 The quadrature detection mentioned in @sec-processing
 allows to separate positive frequencies (faster than the carrier) to negative ones (slower than the carrier), thus the spectrum goes from $-F_{max}$ to $+F_{max}$, with a complex spectral width $SW_c = 2F_{max}$,
-and so, in quadratic detection, the Nyquist-Shannon relation is modified to:
+and so, in quadratic detection, the Sampling criterion is modified to:
 $$SW_c = \frac{1}{\Delta t}$${#eq-Nyquist-NMR}
 
 The excitation with a single short pulse means that all signals start with an equivalent phase, this allows to easily obtain a absorption spectrum by correcting the global phase of the spectrum.
@@ -694,7 +695,7 @@ $$ \text{FT}_{3D}[s(x,y,z)] = S(\xi, \upsilon, \zeta) =  \iiint_{-\infty}^{+\inf
 
 $$ \text{FT}_{3D}^{-1}[S(\xi, \upsilon, \zeta)] = s(x,y,z) =  \iiint_{-\infty}^{+\infty} S(\xi, \upsilon, \zeta) e^{2i \pi (\xi x + \upsilon y+ \zeta z)} d\xi d\upsilon d\zeta$$
 
-All the properties and theorems presented in section [@sec-expe] and [@sec-results] still hold but have to be interpreted with care, as the direct and reciprocal domains, being multidimentionnal, are defined differently.
+All the properties and theorems presented in [@sec-expe] and [@sec-results] still hold but have to be interpreted with care, as the direct and reciprocal domains, being multidimentionnal, are defined differently.
 
 In direct imaging approaches such as microscopy, FT is not used to produce the result but to apply some operations in the reciprocal domain that would be cumbersome, if not impossible, in the image domain (see @sec-reciprocal).
 Such operation typically includes blurring or de-blurring, de-noising, de-screening, enhancement, deconvolution, and resampling. However, the results here are estimated on the image itself, so the process implies an inverse FT at the end.
@@ -856,7 +857,7 @@ Novel approaches in spectral analysis are continually emerging, addressing vario
 How can we improve the accuracy and precision of Fourier analysis in real-world scenarios for imperfect datasets?
 How can we ensure the detection of faint signals in the presence of large, unwanted sources?
 Is it possible to track the subtle frequency variations of an unstable source - such as the ion packet orbiting in the FTICR or Orbitrap instruments?
-How can we separate frequencies closer to each other than the minimum separation defined by the Nyquist theorem?
+How can we separate frequencies closer to each other than the minimum separation defined by the Sampling theorem?
 
 ### Non-standard Sampling
 Traditional FT assumes uniform sampling, but non-uniform sampling (NUS) techniques are gaining traction.
@@ -869,7 +870,7 @@ These approaches will have to be improved to allow the analysis of rapidly varyi
 
 Compressed sensing is a revolutionary approach that enables the reconstruction of signals from significantly fewer samples than traditionally required and has been successfully applied to NUS data and corrupted ones.
 It leverages the sparsity of signals in the Fourier spectrum to recover accurate information.[@Candes_2006; @Donoho_2006]
-Based on assumptions different from the central assumptions of the classical Fourier theory, it even allows, in certain conditions, to overcome the Nyquist theorem in the time domain (sub-Nyquist sampling) and the frequency domain (super-resolution)
+Based on assumptions different from the central assumptions of the classical Fourier theory, it even allows, in certain conditions, to overcome the Sampling theorem in the time domain (sub-Nyquist sampling) and the frequency domain (super-resolution)
 in a manner not unrelated to the optical super-resolution approaches which overcome the diffraction limits in microscopy.
 
 ## Conclusion...
@@ -907,8 +908,8 @@ educational company.
 **Fourier series**
 : a series of sinusoidal functions that can a approximate any periodic function.
 
-**Nyquist criterion**
-: determines the highest frequency faithfully sampled by a given periodic sampling.
+**Sampling criterion**
+: (or Nyquist criterion) determines the highest frequency faithfully sampled by a given periodic sampling.
 
 **Discrete Fourier Transform**
 : (or DFT) is a linear algebra transformation, which can be represented by a square matrix; it shares many properties with the analytical Fourier Transform operation applied to continuous functions.
